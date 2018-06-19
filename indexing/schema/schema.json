@@ -1,0 +1,101 @@
+{
+  "objectDefinitions": [
+    {
+      "name": "movie",
+      "propertyDefinitions": [
+        {
+          "name": "actorName",
+          "isReturnable": true,
+          "isRepeatable": true,
+          "stringPropertyOptions": {
+            "tokenization": "TEXT",
+            "operatorOptions": {
+              "operatorName": "actor"
+            }
+          }
+        },
+        {
+          "name": "releaseDate",
+          "isReturnable": true,
+          "isRepeatable": false,
+          "datePropertyOptions": {
+            "operatorOptions": {
+              "operatorName": "released",
+              "lessThanOperatorName": "releasedbefore",
+              "greaterThanOperatorName": "releasedafter"
+            }
+          }
+        },
+        {
+          "name": "duration",
+          "isReturnable": true,
+          "isRepeatable": false,
+          "stringPropertyOptions": {
+            "tokenization": "TEXT",
+            "operatorOptions": {
+              "operatorName": "duration"
+            }
+          }
+        },
+        {
+          "name": "movieTitle",
+          "isReturnable": true,
+          "isRepeatable": false,
+          "stringPropertyOptions": {
+            "tokenization": "TEXT",
+            "tokenImportance": "HIGHEST",
+            "operatorOptions": {
+              "operatorName": "title"
+            }
+          }
+        },
+        {
+          "name": "mpaaRating",
+          "isReturnable": true,
+          "isRepeatable": false,
+          "filterPropertyOptions": {
+            "tokenization": "ATOM",
+            "operatorName": "rated"
+          }
+        },
+        {
+          "name": "genre",
+          "isReturnable": true,
+          "isRepeatable": true,
+          "enumPropertyOptions": {
+            "operatorOptions": {
+              "operatorName": "genre"
+            },
+            "possibleValues": [
+              {
+                "stringValue": "Action"
+              },
+              {
+                "stringValue": "Biography"
+              },
+              {
+                "stringValue": "Drama"
+              },
+              {
+                "stringValue": "Sci-fi"
+              }
+            ]
+          }
+        },
+        {
+          "name": "userRating",
+          "isReturnable": true,
+          "integerPropertyOptions": {
+            "orderedRanking": "ASCENDING",
+            "maximumValue": "10",
+            "operatorOptions": {
+              "operatorName": "score",
+              "lessThanOperatorName": "scorebelow",
+              "greaterThanOperatorName": "scoreabove"
+            }
+          }
+        }
+      ]
+    }
+  ]
+}
