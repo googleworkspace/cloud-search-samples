@@ -1,0 +1,4 @@
+# Each row is defined as: term, synonym1[, ..., synonymN]
+scifi, science fiction, sci fi
+comedy, parody, humorous, tall tale
+crime, gangster, hardboiled, legal thriller, murder mystery
