@@ -37,6 +37,7 @@ import com.google.enterprise.cloudsearch.sdk.indexing.template.RepositoryDoc;
 
 import java.util.Collections;
 import java.util.Iterator;
+import java.util.logging.Logger;
 import java.util.stream.IntStream;
 // [END cloud_search_sdk_imports]
 
@@ -92,6 +93,9 @@ public class FullTraversalSample {
    */
   public static class SampleRepository implements Repository {
 
+    /** Log output */
+    Logger log = Logger.getLogger(SampleRepository.class.getName());
+
     /** Number of synthetic documents to index. */
     private int numberOfDocuments;
 
@@ -105,7 +109,7 @@ public class FullTraversalSample {
      */
     @Override
     public void init(RepositoryContext context) {
-      System.out.println("Simple Repository init().");
+      log.info("Initializing repository");
       numberOfDocuments = Configuration.getInteger("sample.documentCount", 10).get();
     }
 
@@ -114,7 +118,7 @@ public class FullTraversalSample {
      */
     @Override
     public void close() {
-      System.out.println("Simple Repository close().");
+      log.info("Closing repository");
     }
 
     /**
@@ -133,7 +137,7 @@ public class FullTraversalSample {
      */
     @Override
     public CheckpointCloseableIterable<ApiOperation> getAllDocs(byte[] checkpoint) {
-      System.out.println("Simple Repository getAllDocs().");
+      log.info("Retrieving all documents.");
 
       Iterator<ApiOperation> allDocs = IntStream.range(0, numberOfDocuments)
           .mapToObj(this::buildDocument)
@@ -151,7 +155,7 @@ public class FullTraversalSample {
      * @return the fully formed document ready for indexing
      */
     private ApiOperation buildDocument(int id) {
-      // Make he document is publicly readable within the domain
+      // Make the document publicly readable within the domain
       Acl acl = new Acl.Builder()
           .setReaders(Collections.singletonList(Acl.getCustomerPrincipal())).build();
 

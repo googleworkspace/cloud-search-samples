@@ -4,7 +4,7 @@
 <img alt="Open in Cloud Shell" src ="http://gstatic.com/cloudssh/images/open-btn.png"></a>
 
 [Google Cloud Search][cloud-search] allows enterprises to index and search
-for information across a wide variety of data sources. This sample illutrates
+for information across a wide variety of data sources. This sample illustrates
 building a simple indexing connector using the [Connector SDK][sdk-guide].
 
 [cloud-search]: https://developers.google.com/cloud-search/
