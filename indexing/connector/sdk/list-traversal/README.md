@@ -1,4 +1,4 @@
-# Full Traversal Connector Sample
+# Listing Traversal Connector Sample
 
 [![Open in Cloud Shell][cloudshell-badge]][cloudshell-open]
 
@@ -36,10 +36,12 @@ mvn exec:java -Dexec.mainClass=com.google.cloudsearch.samples.FullTraversalSampl
     -Dexec.args="-Dconfig=sample-config.properties"
 ```
 
-The connector is configured to run once and exit.
+The connector is configured to run continuously with a full traversal every 2
+minutes. At the start of each traversal a set of random mutations are applied
+to the generated documents to simulate a production system.
 
 [cloudshell-badge]: http://gstatic.com/cloudssh/images/open-btn.png
-[cloudshell-open]: https://console.cloud.google.com/cloudshell/open?git_repo=https://github.com/gsuitedevs/cloud-search-samples&page=editor&open_in_editor=indexing/connector/sdk/full-traversal/README.md
+[cloudshell-open]: https://console.cloud.google.com/cloudshell/open?git_repo=https://github.com/gsuitedevs/cloud-search-samples&page=editor&open_in_editor=indexing/connector/sdk/list-traversal/README.md
 [cloud-search]: https://developers.google.com/cloud-search/
 [google-api-java]: https://github.com/google/google-api-java-client
 [sdk-guide]: https://developers.google.com/cloud-search/docs/guides/connector-overview
