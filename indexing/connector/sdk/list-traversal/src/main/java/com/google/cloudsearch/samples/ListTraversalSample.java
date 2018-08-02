@@ -256,7 +256,9 @@ public class ListTraversalSample {
       // Version is required, set to current timestamp.
       byte[] version = Longs.toByteArray(System.currentTimeMillis());
 
-      String hash = this.calculateMetadataHash(documentId);
+      // Set metadata hash so queue can detect changes
+      String metadataHash = this.calculateMetadataHash(documentId);
+
       // Using the SDK item builder class to create the document with
       // appropriate attributes. This can be expanded to include metadata
       // fields etc.
@@ -265,7 +267,7 @@ public class ListTraversalSample {
           .setAcl(acl)
           .setUrl(IndexingItemBuilder.FieldOrValue.withValue(viewUrl))
           .setVersion(version)
-          .setHash(hash)
+          .setHash(metadataHash)
           .build();
 
       // For this sample, content is just plain text
