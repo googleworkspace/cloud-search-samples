@@ -13,9 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package com.google.cloudsearch.samples;
-
 
 // [START cloud_search_sdk_imports]
 import com.google.api.client.http.ByteArrayContent;
@@ -44,13 +42,17 @@ import java.util.stream.IntStream;
 /**
  * A sample connector using the Cloud Search SDK.
  *
- * <p>This is a simplified "Hello World!" sample connector that takes advantage of the Cloud Search
- * SDK including its optional template classes.
+ * <p>This is a simplified  sample connector that takes advantage of the Cloud
+ * Search SDK. The connector uses the full traversal template which is
+ * suitable for small repositories or ones with limited capabilities. The
+ * full set of documents in the repository are indexed with each traversal.
  *
- * <p>You must provide a configuration file for the connector. This configuration file (for example:
- * sample-config.properties) is supplied to the connector via a command line argument:
+ * <p>You must provide a configuration file for the connector. This
+ * configuration file (for example: sample-config.properties) is supplied to the
+ * connector via a command line argument:
  *
- * <pre>java com.google.cloudsearch.samples.FullTraversalSample -Dconfig=sample-config.properties
+ * <pre>java com.google.cloudsearch.samples.FullTraversalSample \
+ *   -Dconfig=sample-config.properties
  * </pre>
  *
  * <p>Sample configuration file:
@@ -71,8 +73,8 @@ import java.util.stream.IntStream;
 public class FullTraversalSample {
 
   /**
-   * This sample connector uses the Cloud Search SDK template class for a "full traversal"
-   * connector. This leverages the SDK to use a prebuilt framework for scheduling traversals.
+   * This sample connector uses the Cloud Search SDK template class for a full
+   * traversal connector.
    *
    * @param args program command line arguments
    * @throws InterruptedException thrown if an abort is issued during initialization
@@ -87,9 +89,10 @@ public class FullTraversalSample {
   /**
    * Sample repository that indexes a set of synthetic documents.
    *
-   * By using the SDK provided connector templates, the only code required from the connector
-   * developer are the methods from the {@link Repository} class. These are used to perform the
-   * actual access of the data for uploading via the API.
+   * By using the SDK provided connector templates, the only code required from
+   * the connector developer are the methods from the {@link Repository} class.
+   * These are used to perform the actual access of the data for uploading via
+   * the API.
    */
   public static class SampleRepository implements Repository {
 
@@ -124,16 +127,15 @@ public class FullTraversalSample {
     /**
      * Gets all the data repository documents.
      *
-     * This is the core of the {@link Repository} implemented code for a full traversal template
-     * connector. A complete traversal of the entire data repository is performed here. This would
-     * be unused in the listing traversal template connector implementation.
+     * This is the core of the {@link Repository} implemented code for a full
+     * traversal connector. A complete traversal of the entire data repository
+     * is performed here.
      *
-     * For this simple sample, there are only a small set of statically created documents
-     * defined. This code would be expanded upon to interface to an actual external data repository.
+     * For this sample there are only a small set of statically created documents
+     * defined.
      *
      * @param checkpoint save state from last iteration
-     * @return all the data repository documents, typically in an iterator of {@link RepositoryDoc}
-     * instances
+     * @return An iterator of {@link RepositoryDoc} instances
      */
     @Override
     public CheckpointCloseableIterable<ApiOperation> getAllDocs(byte[] checkpoint) {
@@ -148,8 +150,8 @@ public class FullTraversalSample {
     /**
      * Creates a document for indexing.
      *
-     * For this connector sample, the created document is domain public searchable. The content
-     * is a simple text string.
+     * For this connector sample, the created document is domain public
+     *  searchable. The content is a simple text string.
      *
      * @param id unique local id for the document
      * @return the fully formed document ready for indexing
@@ -185,30 +187,30 @@ public class FullTraversalSample {
           .build();
     }
 
-    //
-    // The following method is not used in this simple full traversal sample connector, but could
-    // be implemented if the data repository supports a way to detect changes.
-    //
+    // The following method is not used in this simple full traversal sample
+    // connector, but could be implemented if the data repository supports a
+    //  way to detect changes.
 
     /**
      * {@inheritDoc}
      *
-     * <p>This method is not required by the FullTraversalConnector and is unimplemented.
+     * <p>This method is not required by the FullTraversalConnector and is
+     * unimplemented.
      */
     @Override
     public CheckpointCloseableIterable<ApiOperation> getChanges(byte[] checkpoint) {
       return null;
     }
 
-    //
-    // The following methods are not used in the full traversal connector, but might be used in
-    // the template and/or custom listing traversal connector implementations.
-    //
+    // The following methods are not used in the full traversal connector, but
+    // might be used in the template and/or custom listing traversal
+    // connector implementations.
 
     /**
      * {@inheritDoc}
      *
-     * <p>This method is not required by the FullTraversalConnector and is unimplemented.
+     * <p>This method is not required by the FullTraversalConnector and is
+     * unimplemented.
      */
     @Override
     public CheckpointCloseableIterable<ApiOperation> getIds(byte[] checkpoint) {
@@ -218,7 +220,8 @@ public class FullTraversalSample {
     /**
      * {@inheritDoc}
      *
-     * <p>This method is not required by the FullTraversalConnector and is unimplemented.
+     * <p>This method is not required by the FullTraversalConnector and is
+     * unimplemented.
      */
     @Override
     public ApiOperation getDoc(Item item) {
@@ -228,7 +231,8 @@ public class FullTraversalSample {
     /**
      * {@inheritDoc}
      *
-     * <p>This method is not required by the FullTraversalConnector and is unimplemented.
+     * <p>This method is not required by the FullTraversalConnector and is
+     * unimplemented.
      */
     @Override
     public boolean exists(Item item) {

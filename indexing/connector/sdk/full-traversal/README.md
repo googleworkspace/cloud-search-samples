@@ -5,6 +5,8 @@
 [Google Cloud Search][cloud-search] allows enterprises to index and search
 for information across a wide variety of data sources. This sample illustrates
 building a simple indexing connector using the [Connector SDK][sdk-guide].
+The approach used in the sample is suitable for small or limited capability
+repositories where all items must be enumerated.  
 
 ## Set up the samples
 

@@ -38,13 +38,19 @@ import java.util.logging.Logger;
 /**
  * A sample connector using the Cloud Search SDK.
  *
- * <p>This is a simplified "Hello World!" sample connector that takes advantage of the Cloud Search
- * SDK including its optional template classes.
+ * <p>This is a simplified sample connector that takes advantage of the
+ * Cloud Search SDK. It illustrates using the listing connector template and
+ * queues to detect changes and more efficiently indexing content vs. the
+ * full traversal strategy. While the full set of documents are traversed
+ * and queued, document content is only transmitted for new or modified
+* documents.
  *
- * <p>You must provide a configuration file for the connector. This configuration file (for example:
- * sample-config.properties) is supplied to the connector via a command line argument:
+ * <p>You must provide a configuration file for the connector. This
+ * configuration file (for example: sample-config.properties) is supplied to
+ * the connector via a command line argument:
  *
- * <pre>java com.google.cloudsearch.samples.FullTraversalSample -Dconfig=sample-config.properties
+ * <pre>java com.google.cloudsearch.samples.FullTraversalSample \
+ * -Dconfig=sample-config.properties
  * </pre>
  *
  * <p>Sample properties file:
@@ -69,8 +75,8 @@ import java.util.logging.Logger;
  */
 public class ListTraversalSample {
   /**
-   * This sample connector uses the Cloud Search SDK template class for a "list traversal"
-   * connector. This leverages the SDK to use a prebuilt framework for scheduling traversals.
+   * This sample connector uses the Cloud Search SDK template class for a
+   * list traversal connector.
    *
    * @param args program command line arguments
    * @throws InterruptedException thrown if an abort is issued during initialization
@@ -85,12 +91,12 @@ public class ListTraversalSample {
   /**
    * Sample repository that indexes a set of synthetic documents.
    * <p>
-   * By using the SDK provided connector templates, the only code required from the connector
-   * developer are the methods from the {@link Repository} class. These are used to perform the
-   * actual access of the data for uploading via the API.
+   * By using the SDK provided connector templates, the only code required
+   * from the connector developer are the methods from the {@link Repository}
+   * class. These are used to perform the actual access of the data for
+   * uploading via the API.
    */
   public static class SampleRepository implements Repository {
-
     /**
      * Log output
      */
@@ -102,14 +108,15 @@ public class ListTraversalSample {
     private int numberOfDocuments;
 
     /**
-     * Tracks the state of synthetic documents between traversals. Maps the document ID
-     * to a timestamp which is mutated between traversals and used to dervive content
-     * hashes and document versions.
+     * Tracks the state of synthetic documents between traversals. Maps the
+     * document ID to a timestamp which is mutated between traversals and
+     * used to dervive content hashes and document versions.
      */
     private Map<Integer, Long> documents = new HashMap<>();
 
     /**
-     * High water mark for document IDs.
+     * High water mark for document IDs, used when generating additional
+     * docs during mutations.
      */
     private int lastDocumentId = 0;
 
@@ -139,19 +146,21 @@ public class ListTraversalSample {
     /**
      * Gets all of the existing document IDs from the data repository.
      *
-     * <p>This method is called by {@link ListingConnector#traverse()} during <em>full
-     * traversals</em>. Every document ID and content hash value in the <em>repository</em> is
-     * pushed to the Cloud Search queue. Each pushed document is later polled and processed in the
-     * {@link #getDoc(Item)} method.
+     * <p>This method is called by {@link ListingConnector#traverse()} during
+     * <em>full traversals</em>. Every document ID and metadata hash value in
+     * the <em>repository</em> is pushed to the Cloud Search queue. Each pushed
+     * document is later polled and processed in the {@link #getDoc(Item)} method.
+     * <p>
+     * The metadata hash values are pushed to aid document change detection. The
+     * queue sets the document status depending on the hash comparison. If the
+     * pushed ID doesn't yet exist in Cloud Search, the document's status is
+     * set to <em>new</em>. If the ID exists but has a mismatched hash value,
+     * its status is set to <em>modified</em>. If the ID exists and matches
+     * the hash value, its status is unchanged.
      *
-     * <p>The content hash values are pushed because this sample connector's repository does not
-     * have built in document change detection. The queue sets the document status depending on the
-     * hash comparison. If the pushed ID doesn't yet exist in Cloud Search, the document's status is
-     * set to <em>new</em>. If the ID exists but has a mismatched hash value, its status is set to
-     * <em>modified</em>. If the ID exists and matches the hash value, its status is unchanged.
-     *
-     * <p>In every case, the pushed content hash value is only used for comparison. The hash value
-     * is only set in the queue during an update (see {@link #getDoc(Item)}).
+     * <p>In every case, the pushed content hash value is only used for
+     * comparison. The hash value is only set in the queue during an
+     * update (see {@link #getDoc(Item)}).
      *
      * @param checkpoint value defined and maintained by this connector
      * @return this is typically a {@link PushItems} instance
@@ -163,13 +172,13 @@ public class ListTraversalSample {
       mutate();
 
       PushItems.Builder allIds = new PushItems.Builder();
-      for (Map.Entry<Integer, Long> entry : documents.entrySet()) {
+      for (Map.Entry<Integer, Long> entry : this.documents.entrySet()) {
         String documentId = Integer.toString(entry.getKey());
-        String contentHash = this.calculateContentHash(entry.getValue());
-        PushItem item = new PushItem().setContentHash(contentHash);
+        String hash = this.calculateMetadataHash(entry.getKey());
+        PushItem item = new PushItem().setMetadataHash(hash);
+        log.info("Pushing " + documentId);
         allIds.addPushItem(documentId, item);
       }
-
       ApiOperation pushOperation = allIds.build();
       return new CheckpointCloseableIterableImpl.Builder<>(
           Collections.singletonList(pushOperation))
@@ -179,25 +188,27 @@ public class ListTraversalSample {
     /**
      * Gets a single data repository document.
      *
-     * <p>This method is called by the {@link ListingConnector} during a poll of the Cloud Search
-     * queue. Each queued document is processed individually depending on its state in the data
-     * repository:
+     * <p>This method is called by the {@link ListingConnector} during a poll
+     * of the Cloud Search queue. Each queued document is processed
+     * individually depending on its state in the data  repository:
      *
      * <ul>
-     * <li>Missing: The document is no longer in the data repository, so it is deleted from
-     * Cloud Search.</li>
-     * <li>Unmodified: The document is already indexed and it has not changed, so re-push with an
-     * unmodified status.</li>
-     * <li>New or modified: The document is brand new, or has been modified since it was indexed, so
-     * re-index it.</li>
+     * <li>Missing: The document is no longer in the data repository, so it
+     * is deleted from Cloud Search.</li>
+     * <li>Unmodified: The document is already indexed and it has not changed,
+     * so re-push with an unmodified status.</li>
+     * <li>New or modified: The document is brand new, or has been modified
+     * since it was indexed, so re-index it.</li>
      * </ul>
      *
-     * <p>The content hash is sent during all <em>new</em> or <em>modified</em> status document
-     * updates. This hash value is stored with the document in the Cloud Search API queue for future
-     * comparisons of pushed document IDs (see {@link #getIds(byte[])}).
+     * <p>The metadata hash is sent during all <em>new</em> or <em>modified</em>
+     * status document  updates. This hash value is stored with the document
+     * in the Cloud Search API queue for future comparisons of pushed
+     * document IDs (see {@link #getIds(byte[])}).
      *
      * @param item the data repository document to retrieve
-     * @return the document's state determines which type of {@link ApiOperation} is returned:
+     * @return the document's state determines which type of
+     *         {@link ApiOperation} is returned:
      * {@link RepositoryDoc}, {@link DeleteItem}, or {@link PushItem}
      */
     @Override
@@ -227,8 +238,8 @@ public class ListTraversalSample {
     /**
      * Creates a document for indexing.
      * <p>
-     * For this connector sample, the created document is domain public searchable. The content
-     * is a simple text string.
+     * For this connector sample, the created document is domain public
+     * searchable. The content is a simple text string.
      *
      * @param documentId unique local id for the document
      * @return the fully formed document ready for indexing
@@ -236,7 +247,8 @@ public class ListTraversalSample {
     private ApiOperation buildDocument(int documentId) {
       // Make the document publicly readable within the domain
       Acl acl = new Acl.Builder()
-          .setReaders(Collections.singletonList(Acl.getCustomerPrincipal())).build();
+          .setReaders(Collections.singletonList(Acl.getCustomerPrincipal()))
+          .build();
 
       // Url is required. Use google.com as a placeholder for this sample.
       String viewUrl = "https://www.google.com";
@@ -244,13 +256,16 @@ public class ListTraversalSample {
       // Version is required, set to current timestamp.
       byte[] version = Longs.toByteArray(System.currentTimeMillis());
 
-      // Using the SDK item builder class to create the document with appropriate attributes
-      // (this can be expanded to include metadata fields etc.)
+      String hash = this.calculateMetadataHash(documentId);
+      // Using the SDK item builder class to create the document with
+      // appropriate attributes. This can be expanded to include metadata
+      // fields etc.
       Item item = new IndexingItemBuilder(Integer.toString(documentId))
           .setItemType(IndexingItemBuilder.ItemType.CONTENT_ITEM)
           .setAcl(acl)
           .setUrl(IndexingItemBuilder.FieldOrValue.withValue(viewUrl))
           .setVersion(version)
+          .setHash(hash)
           .build();
 
       // For this sample, content is just plain text
@@ -260,37 +275,34 @@ public class ListTraversalSample {
       // Create the fully formed document
       return new RepositoryDoc.Builder()
           .setItem(item)
-          .setContent(byteContent,
-              calculateContentHash(documentId),
-              IndexingService.ContentFormat.TEXT)
+          .setContent(byteContent, IndexingService.ContentFormat.TEXT)
           .build();
     }
 
-
-    //
-    // The following method is not used in this simple full traversal sample connector, but could
-    // be implemented if the data repository supports a way to detect changes.
-    //
+    // The following method is not used in this simple full traversal sample
+    // connector, but could be implemented if the data repository supports
+    // a way to detect changes.
 
     /**
      * {@inheritDoc}
      *
-     * <p>This method is not required by the FullTraversalConnector and is unimplemented.
+     * <p>This method is not required by the FullTraversalConnector and is
+     * unimplemented.
      */
     @Override
     public CheckpointCloseableIterable<ApiOperation> getChanges(byte[] checkpoint) {
       return null;
     }
 
-    //
-    // The following methods are not used in the full traversal connector, but might be used in
-    // the template and/or custom listing traversal connector implementations.
-    //
+    // The following methods are not used in the full traversal connector, but
+    // might be used in the template and/or custom listing traversal connector
+    // implementations.
 
     /**
      * {@inheritDoc}
      *
-     * <p>This method is not required by the FullTraversalConnector and is unimplemented.
+     * <p>This method is not required by the FullTraversalConnector and is
+     * unimplemented.
      */
     @Override
     public CheckpointCloseableIterable<ApiOperation> getAllDocs(byte[] checkpoint) {
@@ -300,7 +312,8 @@ public class ListTraversalSample {
     /**
      * {@inheritDoc}
      *
-     * <p>This method is not required by the FullTraversalConnector and is unimplemented.
+     * <p>This method is not required by the FullTraversalConnector and is
+     * unimplemented.
      */
     @Override
     public boolean exists(Item item) {
@@ -309,14 +322,15 @@ public class ListTraversalSample {
 
 
     /**
-     * Returns a hash of the item's content. For the generated documents, a timestamp is
-     * used to generate a hash. In production implementation, a cryptographic hash of the
-     * actual content should be used.
+     * Returns a hash of the item's metadata. For the generated documents, a
+     * timestamp is used to generate a hash. In production implementation,
+     * a cryptographic hash of the actual content should be used.
      *
-     * @param timestamp Time the document was last modified/created
+     * @param documentId document to get hash value of
      * @return Hash value of the document
      */
-    private String calculateContentHash(long timestamp) {
+    private String calculateMetadataHash(int documentId) {
+      long timestamp = this.documents.get(documentId);
       return Long.toHexString(timestamp);
     }
 

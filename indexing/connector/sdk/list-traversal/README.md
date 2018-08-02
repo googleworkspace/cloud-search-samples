@@ -4,7 +4,8 @@
 
 [Google Cloud Search][cloud-search] allows enterprises to index and search
 for information across a wide variety of data sources. This sample illustrates
-building a simple indexing connector using the [Connector SDK][sdk-guide].
+building a simple indexing connector using the [Connector SDK][sdk-guide]
+and queues to more efficiently index content vs. the full traversal strategy.
 
 ## Set up the samples
 
@@ -32,7 +33,7 @@ api.serviceAccountPrivateKeyFile=./my-connector-credentials.json
 To run the connector and index the documents, run the command:
 
 ```
-mvn exec:java -Dexec.mainClass=com.google.cloudsearch.samples.FullTraversalSample \
+mvn exec:java -Dexec.mainClass=com.google.cloudsearch.samples.ListTraversalSample \
     -Dexec.args="-Dconfig=sample-config.properties"
 ```
 
