@@ -2,66 +2,112 @@
   "objectDefinitions": [
     {
       "name": "movie",
+      "options": {
+        "displayOptions": {
+          "objectDisplayLabel": "Movie",
+          "metalines": [
+            {
+              "properties": [
+                {
+                  "propertyName": "mpaaRating"
+                },
+                {
+                  "propertyName": "duration"
+                },
+                {
+                  "propertyName": "releaseDate"
+                }
+              ]
+            },
+            {
+              "properties": [
+                {
+                  "propertyName": "genre"
+                },
+                {
+                  "propertyName": "userRating"
+                }
+              ]
+            }
+          ]
+        }
+      },
       "propertyDefinitions": [
         {
           "name": "actorName",
           "isReturnable": true,
           "isRepeatable": true,
-          "stringPropertyOptions": {
-            "tokenization": "TEXT",
+          "isFacetable": true,
+          "textPropertyOptions": {
             "operatorOptions": {
               "operatorName": "actor"
             }
+          },
+          "displayOptions": {
+            "displayLabel": "Actor"
           }
         },
         {
           "name": "releaseDate",
           "isReturnable": true,
-          "isRepeatable": false,
+          "isSortable": true,
           "datePropertyOptions": {
             "operatorOptions": {
               "operatorName": "released",
               "lessThanOperatorName": "releasedbefore",
               "greaterThanOperatorName": "releasedafter"
             }
+          },
+          "displayOptions": {
+            "displayLabel": "Release date"
           }
         },
         {
           "name": "duration",
           "isReturnable": true,
-          "isRepeatable": false,
-          "stringPropertyOptions": {
-            "tokenization": "TEXT",
+          "textPropertyOptions": {
             "operatorOptions": {
               "operatorName": "duration"
             }
+          },
+          "displayOptions": {
+            "displayLabel": "Run length"
           }
         },
         {
           "name": "movieTitle",
           "isReturnable": true,
-          "isRepeatable": false,
-          "stringPropertyOptions": {
-            "tokenization": "TEXT",
-            "tokenImportance": "HIGHEST",
+          "textPropertyOptions": {
+            "retrievalImportance": {
+              "importance": "HIGHEST"
+            },
             "operatorOptions": {
               "operatorName": "title"
             }
+          },
+          "displayOptions": {
+            "displayLabel": "Title"
           }
         },
         {
           "name": "mpaaRating",
           "isReturnable": true,
-          "isRepeatable": false,
-          "filterPropertyOptions": {
-            "tokenization": "ATOM",
-            "operatorName": "rated"
+          "isFacetable": true,
+          "textPropertyOptions": {
+            "operatorOptions": {
+              "operatorName": "rated",
+              "exactMatchWithOperator": true
+            }
+          },
+          "displayOptions": {
+            "displayLabel": "MPAA rating"
           }
         },
         {
           "name": "genre",
           "isReturnable": true,
           "isRepeatable": true,
+          "isFacetable": true,
           "enumPropertyOptions": {
             "operatorOptions": {
               "operatorName": "genre"
@@ -80,11 +126,15 @@
                 "stringValue": "Sci-fi"
               }
             ]
+          },
+          "displayOptions": {
+            "displayLabel": "Genre"
           }
         },
         {
           "name": "userRating",
           "isReturnable": true,
+          "isSortable": true,
           "integerPropertyOptions": {
             "orderedRanking": "ASCENDING",
             "maximumValue": "10",
@@ -93,6 +143,9 @@
               "lessThanOperatorName": "scorebelow",
               "greaterThanOperatorName": "scoreabove"
             }
+          },
+          "displayOptions": {
+            "displayLabel": "Audience score"
           }
         }
       ]

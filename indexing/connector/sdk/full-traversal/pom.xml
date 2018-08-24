@@ -33,20 +33,20 @@
     <artifactId>shared-configuration</artifactId>
     <version>1.0.9</version>
   </parent>
-  
+
   <properties>
     <maven.compiler.target>1.8</maven.compiler.target>
     <maven.compiler.source>1.8</maven.compiler.source>
   </properties>
 
   <dependencies>
-    <!-- [START indexing-sdk-maven] -->
+    <!-- [START cloud_search_indexing_sdk_maven] -->
     <dependency>
       <groupId>com.google.enterprise.cloudsearch</groupId>
       <artifactId>google-cloudsearch-indexing-connector-sdk</artifactId>
       <version>v1-0.0.1</version>
     </dependency>
-    <!-- [END indexing-sdk-maven] -->
+    <!-- [END cloud_search_indexing_sdk_maven] -->
 
     <!-- Test dependencies -->
     <dependency>

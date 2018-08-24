@@ -18,25 +18,29 @@ package com.google.cloudsearch.samples;
 
 import com.beust.jcommander.JCommander;
 import com.beust.jcommander.Parameter;
-// [START imports]
+// [START cloud_search_api_imports]
 import com.google.api.client.googleapis.auth.oauth2.GoogleCredential;
 import com.google.api.client.googleapis.json.GoogleJsonResponseException;
 import com.google.api.client.googleapis.util.Utils;
-import com.google.api.services.cloudsearch.v1beta1.CloudSearch;
-import com.google.api.services.cloudsearch.v1beta1.model.Schema;
-import com.google.api.services.cloudsearch.v1beta1.model.UpdateSchemaRequest;
+import com.google.api.services.cloudsearch.v1.CloudSearch;
+import com.google.api.services.cloudsearch.v1.model.Operation;
+import com.google.api.services.cloudsearch.v1.model.Schema;
+import com.google.api.services.cloudsearch.v1.model.Status;
+import com.google.api.services.cloudsearch.v1.model.UpdateSchemaRequest;
+// [END cloud_search_api_imports]
 
 import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;
-import java.util.Arrays;
-// [END imports]
+import java.util.Collections;
 
 /**
  * Sample demonstrating how to update the schema for a datasource. Reads
  * the schema from a JSON file.
  */
 public class SchemaSample {
+
+  public static final int OPERATION_POLL_INTERVAL = 3 * 1000;
 
   /**
    * Command line arguments used by the sample
@@ -94,13 +98,13 @@ public class SchemaSample {
     }
   }
 
+  // [START cloud_search_build_api_client]
   /**
    * Builds and initializes the client with service account credentials.
    * @return CloudSearch instance
-   * @throws IOException
+   * @throws IOException if unable to load credentials
    */
   private CloudSearch buildAuthorizedClient() throws IOException {
-    // [START build_client]
     // Get the service account credentials based on the GOOGLE_APPLICATION_CREDENTIALS
     // environment variable
     GoogleCredential credential = GoogleCredential.getApplicationDefault(
@@ -108,7 +112,7 @@ public class SchemaSample {
         Utils.getDefaultJsonFactory());
     // Ensure credentials have the correct scope
     if (credential.createScopedRequired()) {
-      credential = credential.createScoped(Arrays.asList(
+      credential = credential.createScoped(Collections.singletonList(
           "https://www.googleapis.com/auth/cloud_search"
       ));
     }
@@ -119,17 +123,17 @@ public class SchemaSample {
         credential)
         .setApplicationName("Cloud Search Samples")
         .build();
-    // [START end_client]
   }
+  // [START cloud_search_build_api_client]
 
+  // [START cloud_search_update_schema]
   /**
    * Updates the schema for a datasource.
    *
    * @param dataSourceId   Unique ID of the datasource.
    * @param schemaFilePath path to JSON file containing the schema
    */
-  void updateSchema(String dataSourceId, String schemaFilePath) {
-    // [START update_schema]
+   void updateSchema(String dataSourceId, String schemaFilePath) {
     try {
       CloudSearch cloudSearch = buildAuthorizedClient();
       Schema schema;
@@ -139,15 +143,34 @@ public class SchemaSample {
       UpdateSchemaRequest updateSchemaRequest = new UpdateSchemaRequest()
           .setSchema(schema);
       String resourceName = String.format("datasources/%s", dataSourceId);
-      cloudSearch.indexing().datasources().updateSchema(resourceName, updateSchemaRequest).execute();
-      System.out.println("Schema updated.");
+      Operation operation = cloudSearch.indexing().datasources()
+          .updateSchema(resourceName, updateSchemaRequest)
+          .execute();
+
+      // Wait for the operation to complete.
+      while (operation.getDone() == null || operation.getDone() == false) {
+        // Wait before polling again
+        Thread.sleep(OPERATION_POLL_INTERVAL);
+        operation = cloudSearch.operations().get(operation.getName()).execute();
+      }
+
+      // Operation is complete, check result
+      Status error = operation.getError();
+      if (error != null) {
+        System.err.println("Error updating schema:" + error.getMessage());
+      } else {
+        System.out.println("Schema updated.");
+      }
     } catch (GoogleJsonResponseException e) {
-      System.err.println("Unable to delete schema: " + e.getDetails());
+      System.err.println("Unable to update schema: " + e.getDetails());
     } catch (IOException e) {
-      System.err.println("Unable to delete schema: " + e.getMessage());
+      System.err.println("Unable to update schema: " + e.getMessage());
+    } catch (InterruptedException e) {
+      System.err.println("Interrupted while waiting for schema update: "
+          + e.getMessage());
     }
-    // [END update_schema]
-  }
+   }
+  // [END cloud_search_update_schema]
 
 
 
@@ -156,8 +179,8 @@ public class SchemaSample {
    *
    * @param dataSourceId Unique ID of the datasource.
    */
-  private void getSchema(String dataSourceId) {
-    // [START get_schema]
+  void getSchema(String dataSourceId) {
+    // [START cloud_search_get_schema]
     try {
       CloudSearch cloudSearch = buildAuthorizedClient();
       String resourceName = String.format("datasources/%s", dataSourceId);
@@ -168,26 +191,46 @@ public class SchemaSample {
     } catch (IOException e) {
       System.err.println("Unable to delete schema: " + e.getMessage());
     }
-    // [END get_schema]
+    // [END cloud_search_get_schema]
   }
 
+  // [START cloud_search_delete_schema]
   /**
    * Deletes the schema for a datasource.
    *
    * @param dataSourceId Unique ID of the datasource.
    */
-  private void deleteSchema(String dataSourceId) {
-    // [START delete_schema]
+  void deleteSchema(String dataSourceId) {
     try {
       CloudSearch cloudSearch = buildAuthorizedClient();
       String resourceName = String.format("datasources/%s", dataSourceId);
-      cloudSearch.indexing().datasources().deleteSchema(resourceName).execute();
+      Operation operation = cloudSearch.indexing().datasources()
+          .deleteSchema(resourceName)
+          .execute();
+
+      // Wait for the operation to complete.
+      while (operation.getDone() == null || operation.getDone() == false) {
+        // Wait before polling again
+        Thread.sleep(OPERATION_POLL_INTERVAL);
+        operation = cloudSearch.operations().get(operation.getName()).execute();
+      }
+
+      // Operation is complete, check result
+      Status error = operation.getError();
+      if (error != null) {
+        System.err.println("Error deleting schema:" + error.getMessage());
+      } else {
+        System.out.println("Schema deleted.");
+      }
       System.out.println("Schema deleted.");
     } catch (GoogleJsonResponseException e) {
       System.err.println("Unable to delete schema: " + e.getDetails());
     } catch (IOException e) {
       System.err.println("Unable to delete schema: " + e.getMessage());
+    } catch (InterruptedException e) {
+      System.err.println("Interrupted while waiting for schema delete: "
+          + e.getMessage());
     }
-    // [END delete_schema]
   }
+  // [END cloud_search_delete_schema]
 }

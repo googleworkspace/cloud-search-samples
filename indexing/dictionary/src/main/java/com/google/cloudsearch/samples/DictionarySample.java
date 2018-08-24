@@ -16,24 +16,25 @@
 
 package com.google.cloudsearch.samples;
 
-// [START imports]
 import com.beust.jcommander.JCommander;
 import com.beust.jcommander.Parameter;
+// [START cloud_search_api_imports]
 import com.google.api.client.googleapis.auth.oauth2.GoogleCredential;
 import com.google.api.client.googleapis.json.GoogleJsonResponseException;
 import com.google.api.client.googleapis.util.Utils;
-import com.google.api.services.cloudsearch.v1beta1.CloudSearch;
-import com.google.api.services.cloudsearch.v1beta1.model.GSuitePrincipal;
-import com.google.api.services.cloudsearch.v1beta1.model.IndexItemRequest;
-import com.google.api.services.cloudsearch.v1beta1.model.Item;
-import com.google.api.services.cloudsearch.v1beta1.model.ItemAcl;
-import com.google.api.services.cloudsearch.v1beta1.model.ItemMetadata;
-import com.google.api.services.cloudsearch.v1beta1.model.ItemStructuredData;
-import com.google.api.services.cloudsearch.v1beta1.model.NamedProperty;
-import com.google.api.services.cloudsearch.v1beta1.model.Principal;
-import com.google.api.services.cloudsearch.v1beta1.model.StringValues;
-import com.google.api.services.cloudsearch.v1beta1.model.StructuredDataObject;
+import com.google.api.services.cloudsearch.v1.CloudSearch;
+import com.google.api.services.cloudsearch.v1.model.GSuitePrincipal;
+import com.google.api.services.cloudsearch.v1.model.IndexItemRequest;
+import com.google.api.services.cloudsearch.v1.model.Item;
+import com.google.api.services.cloudsearch.v1.model.ItemAcl;
+import com.google.api.services.cloudsearch.v1.model.ItemMetadata;
+import com.google.api.services.cloudsearch.v1.model.ItemStructuredData;
+import com.google.api.services.cloudsearch.v1.model.NamedProperty;
+import com.google.api.services.cloudsearch.v1.model.Principal;
+import com.google.api.services.cloudsearch.v1.model.StructuredDataObject;
+import com.google.api.services.cloudsearch.v1.model.TextValues;
 import com.google.common.primitives.Longs;
+// [END cloud_search_api_imports]
 import org.apache.commons.csv.CSVFormat;
 import org.apache.commons.csv.CSVParser;
 
@@ -46,12 +47,15 @@ import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.StreamSupport;
-// [END imports]
 
 /**
  * Sample demonstrating how to upload dictionary entries to create synonyms
  * Reads terms from a CSV file, where the first column is the term to define
  * and each subsequent column is a synonym for that term.
+ *
+ * This sample also illustrates how to perform basic indexing tasks with
+ * the Cloud Search REST API instead of the SDK. Dictionary entries
+ * are indexed the same as any other content or structured data.
  */
 public class DictionarySample {
   /**
@@ -67,7 +71,7 @@ public class DictionarySample {
 
   /**
    * Main entry point for the sample.
-   * 
+   *
    * Example:
    * <pre>
    *   # Delete a schema
@@ -86,6 +90,7 @@ public class DictionarySample {
     sample.uploadDictionary(arguments.dataSourceId, arguments.dictionaryFile);
   }
 
+  // [START cloud_search_build_api_client]
   /**
    * Builds and initializes the client with service account credentials.
    *
@@ -93,7 +98,6 @@ public class DictionarySample {
    * @throws IOException if unable to read credentials
    */
   private CloudSearch buildAuthorizedClient() throws IOException {
-    // [START build_client]
     // Get the service account credentials based on the GOOGLE_APPLICATION_CREDENTIALS
     // environment variable
     GoogleCredential credential = GoogleCredential.getApplicationDefault(
@@ -112,8 +116,8 @@ public class DictionarySample {
         credential)
         .setApplicationName("Cloud Search Samples")
         .build();
-    // [START end_client]
   }
+  // [START cloud_search_build_api_client]
 
   /**
    * Represents a dictionary entry to define. Currently only terms
@@ -128,11 +132,11 @@ public class DictionarySample {
       this.synonyms = synonyms;
     }
 
-    public List<String> getSynonyms() {
+    List<String> getSynonyms() {
       return synonyms;
     }
 
-    public String getTerm() {
+    String getTerm() {
       return term;
     }
   }
@@ -159,6 +163,7 @@ public class DictionarySample {
     }
   }
 
+  // [START cloud_search_upload_dictionary]
   /**
    * Updates the schema for a datasource.
    *
@@ -166,7 +171,6 @@ public class DictionarySample {
    * @param dictionaryFilePath path to CSV file containing the dictionary
    */
   void uploadDictionary(String dataSourceId, String dictionaryFilePath) {
-    // [START upload_dictionary]
     // Get an authorized client
     CloudSearch cloudSearch;
     try {
@@ -200,11 +204,11 @@ public class DictionarySample {
           .setObjectType("_dictionaryEntry");
       NamedProperty termProperty = new NamedProperty()
           .setName("_term")
-          .setStringValues(new StringValues()
+          .setTextValues(new TextValues()
               .setValues(Collections.singletonList(entry.getTerm())));
       NamedProperty synonymProperty = new NamedProperty()
           .setName("_synonym")
-          .setStringValues(new StringValues()
+          .setTextValues(new TextValues()
               .setValues(entry.getSynonyms()));
       ItemStructuredData structuredData = new ItemStructuredData()
           .setObject(new StructuredDataObject()
@@ -235,6 +239,6 @@ public class DictionarySample {
         System.err.println("Unable to upload dictionary: " + e.getMessage());
       }
     }
-    // [END upload_dictionary]
   }
+  // [END cloud_search_upload_dictionary]
 }
