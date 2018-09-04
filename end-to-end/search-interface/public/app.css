@@ -1,0 +1,21 @@
+.content {
+  padding: 20px;
+}
+
+.header {
+  width: 100%;
+  display: flex;
+  justify-content: flex-end;
+}
+
+#search_results .cloudsearch_result_icon {
+  display: none;
+}
+
+#search_results .cloudsearch_result_snippet {
+  padding-left: 0;
+}
+
+#search_results .cloudsearch_result_count_container {
+  padding-left: 0;
+}

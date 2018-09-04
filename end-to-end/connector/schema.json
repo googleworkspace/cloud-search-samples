@@ -1,0 +1,505 @@
+{
+  "objectDefinitions": [
+    {
+      "name": "repository",
+      "options": {
+        "freshnessOptions": {
+          "freshnessProperty": "updatedAt"
+        },
+        "displayOptions": {
+          "objectDisplayLabel": "Repository",
+          "metalines": [
+            {
+              "properties": [
+                {
+                  "propertyName": "stars"
+                },
+                {
+                  "propertyName": "forks"
+                },
+                {
+                  "propertyName": "watchers"
+                },
+                {
+                  "propertyName": "openIssues"
+                }
+              ]
+            },
+            {
+              "properties": [
+                {
+                  "propertyName": "updatedAt"
+                },
+                {
+                  "propertyName": "topics"
+                }
+              ]
+            }
+          ]
+        }
+      },
+      "propertyDefinitions": [
+        {
+          "name": "stars",
+          "isReturnable": true,
+          "integerPropertyOptions": {
+            "orderedRanking": "ASCENDING",
+            "operatorOptions": {
+              "operatorName": "stars",
+              "lessThanOperatorName": "starsbelow",
+              "greaterThanOperatorName": "starsabove"
+            }
+          },
+          "displayOptions": {
+            "displayLabel": "Stars"
+          }
+        },
+        {
+          "name": "forks",
+          "isReturnable": true,
+          "integerPropertyOptions": {
+            "orderedRanking": "ASCENDING",
+            "operatorOptions": {
+              "operatorName": "forks",
+              "lessThanOperatorName": "forksbelow",
+              "greaterThanOperatorName": "forksabove"
+            }
+          },
+          "displayOptions": {
+            "displayLabel": "Fork count"
+          }
+        },
+        {
+          "name": "openIssues",
+          "isReturnable": true,
+          "integerPropertyOptions": {
+            "orderedRanking": "ASCENDING",
+            "operatorOptions": {
+              "operatorName": "issues",
+              "lessThanOperatorName": "issuesbelow",
+              "greaterThanOperatorName": "issuesabove"
+            }
+          },
+          "displayOptions": {
+            "displayLabel": "Open issue count"
+          }
+        },
+        {
+          "name": "watchers",
+          "isReturnable": true,
+          "integerPropertyOptions": {
+            "orderedRanking": "ASCENDING",
+            "operatorOptions": {
+              "operatorName": "watchers",
+              "lessThanOperatorName": "watchersbelow",
+              "greaterThanOperatorName": "watchersabove"
+            }
+          },
+          "displayOptions": {
+            "displayLabel": "Watcher count"
+          }
+        },
+        {
+          "name": "topics",
+          "isReturnable": true,
+          "isRepeatable": true,
+          "isFacetable": true,
+          "textPropertyOptions": {
+            "retrievalImportance": {
+              "importance": "HIGHEST"
+            },
+            "operatorOptions": {
+              "operatorName": "topic"
+            }
+          },
+          "displayOptions": {
+            "displayLabel": "Topics"
+          }
+        },
+        {
+          "name": "createdAt",
+          "isReturnable": true,
+          "datePropertyOptions": {
+            "operatorOptions": {
+              "operatorName": "createdat",
+              "lessThanOperatorName": "createdbefore",
+              "greaterThanOperatorName": "createdafter"
+            }
+          },
+          "displayOptions": {
+            "displayLabel": "Created"
+          }
+        },
+        {
+          "name": "updatedAt",
+          "isReturnable": true,
+          "datePropertyOptions": {
+            "operatorOptions": {
+              "operatorName": "updatedat",
+              "lessThanOperatorName": "updatedbefore",
+              "greaterThanOperatorName": "updatedafter"
+            }
+          },
+          "displayOptions": {
+            "displayLabel": "Last updated"
+          }
+        }
+      ]
+    },
+    {
+      "name": "issue",
+      "options": {
+        "freshnessOptions": {
+          "freshnessProperty": "updatedAt"
+        },
+        "displayOptions": {
+          "objectDisplayLabel": "Issue",
+          "metalines": [
+            {
+              "properties": [
+                {
+                  "propertyName": "status"
+                },
+                {
+                  "propertyName": "assignee"
+                }
+              ]
+            },
+            {
+              "properties": [
+                {
+                  "propertyName": "updatedAt"
+                },
+                {
+                  "propertyName": "labels"
+                }
+              ]
+            }
+          ]
+        }
+      },
+      "propertyDefinitions": [
+        {
+          "name": "status",
+          "isReturnable": true,
+          "isFacetable": true,
+          "textPropertyOptions": {
+            "retrievalImportance": {
+              "importance": "HIGHEST"
+            },
+            "operatorOptions": {
+              "operatorName": "status"
+            }
+          },
+          "displayOptions": {
+            "displayLabel": "Status"
+          }
+        },
+        {
+          "name": "labels",
+          "isReturnable": true,
+          "isFacetable": true,
+          "textPropertyOptions": {
+            "retrievalImportance": {
+              "importance": "HIGHEST"
+            },
+            "operatorOptions": {
+              "operatorName": "label"
+            }
+          },
+          "displayOptions": {
+            "displayLabel": "Labels"
+          }
+        },
+        {
+          "name": "reportedBy",
+          "isReturnable": true,
+          "isFacetable": true,
+          "textPropertyOptions": {
+            "retrievalImportance": {
+              "importance": "HIGHEST"
+            },
+            "operatorOptions": {
+              "operatorName": "reportedby"
+            }
+          }
+        },
+        {
+          "name": "assignee",
+          "isReturnable": true,
+          "isFacetable": true,
+          "textPropertyOptions": {
+            "retrievalImportance": {
+              "importance": "HIGHEST"
+            },
+            "operatorOptions": {
+              "operatorName": "assignee"
+            }
+          },
+          "displayOptions": {
+            "displayLabel": "Assignee"
+          }
+        },
+        {
+          "name": "comments",
+          "isReturnable": false,
+          "objectPropertyOptions": {
+            "subobjectProperties": [
+              {
+                "name": "comment",
+                "isReturnable": false,
+                "textPropertyOptions": {
+                  "retrievalImportance": {
+                    "importance": "HIGHEST"
+                  },
+                  "operatorOptions": {
+                    "operatorName": "comment"
+                  }
+                }
+              },
+              {
+                "name": "user",
+                "isReturnable": false,
+                "textPropertyOptions": {
+                  "retrievalImportance": {
+                    "importance": "HIGHEST"
+                  },
+                  "operatorOptions": {
+                    "operatorName": "commentby"
+                  }
+                }
+              }
+            ]
+          }
+        },
+        {
+          "name": "createdAt",
+          "isReturnable": true,
+          "datePropertyOptions": {
+            "operatorOptions": {
+              "operatorName": "createdat",
+              "lessThanOperatorName": "createdbefore",
+              "greaterThanOperatorName": "createdafter"
+            }
+          },
+          "displayOptions": {
+            "displayLabel": "Created"
+          }
+        },
+        {
+          "name": "updatedAt",
+          "isReturnable": true,
+          "datePropertyOptions": {
+            "operatorOptions": {
+              "operatorName": "updatedat",
+              "lessThanOperatorName": "updatedbefore",
+              "greaterThanOperatorName": "updatedafter"
+            }
+          },
+          "displayOptions": {
+            "displayLabel": "Last updated"
+          }
+        }
+      ]
+    },
+    {
+      "name": "pullRequest",
+      "options": {
+        "freshnessOptions": {
+          "freshnessProperty": "updatedAt"
+        },
+        "displayOptions": {
+          "objectDisplayLabel": "Pull request",
+          "metalines": [
+            {
+              "properties": [
+                {
+                  "propertyName": "status"
+                },
+                {
+                  "propertyName": "assignee"
+                }
+              ]
+            },
+            {
+              "properties": [
+                {
+                  "propertyName": "updatedAt"
+                },
+                {
+                  "propertyName": "labels"
+                }
+              ]
+            }
+          ]
+        }
+      },
+      "propertyDefinitions": [
+        {
+          "name": "status",
+          "isReturnable": true,
+          "isFacetable": true,
+          "textPropertyOptions": {
+            "retrievalImportance": {
+              "importance": "HIGHEST"
+            },
+            "operatorOptions": {
+              "operatorName": "status"
+            }
+          },
+          "displayOptions": {
+            "displayLabel": "Status"
+          }
+        },
+        {
+          "name": "labels",
+          "isReturnable": true,
+          "isFacetable": true,
+          "textPropertyOptions": {
+            "retrievalImportance": {
+              "importance": "HIGHEST"
+            },
+            "operatorOptions": {
+              "operatorName": "label"
+            }
+          },
+          "displayOptions": {
+            "displayLabel": "Labels"
+          }
+        },
+        {
+          "name": "openedBy",
+          "isReturnable": true,
+          "isFacetable": true,
+          "textPropertyOptions": {
+            "retrievalImportance": {
+              "importance": "HIGHEST"
+            },
+            "operatorOptions": {
+              "operatorName": "openedby"
+            }
+          }
+        },
+        {
+          "name": "assignee",
+          "isReturnable": true,
+          "isFacetable": true,
+          "textPropertyOptions": {
+            "retrievalImportance": {
+              "importance": "HIGHEST"
+            },
+            "operatorOptions": {
+              "operatorName": "assignee"
+            }
+          },
+          "displayOptions": {
+            "displayLabel": "Assignee"
+          }
+        },
+        {
+          "name": "comments",
+          "isReturnable": false,
+          "objectPropertyOptions": {
+            "subobjectProperties": [
+              {
+                "name": "comment",
+                "isReturnable": false,
+                "textPropertyOptions": {
+                  "retrievalImportance": {
+                    "importance": "HIGHEST"
+                  },
+                  "operatorOptions": {
+                    "operatorName": "comment"
+                  }
+                }
+              },
+              {
+                "name": "user",
+                "isReturnable": false,
+                "textPropertyOptions": {
+                  "retrievalImportance": {
+                    "importance": "HIGHEST"
+                  },
+                  "operatorOptions": {
+                    "operatorName": "commentby"
+                  }
+                }
+              }
+            ]
+          }
+        },
+        {
+          "name": "createdAt",
+          "isReturnable": true,
+          "datePropertyOptions": {
+            "operatorOptions": {
+              "operatorName": "createdat",
+              "lessThanOperatorName": "createdbefore",
+              "greaterThanOperatorName": "createdafter"
+            }
+          },
+          "displayOptions": {
+            "displayLabel": "Created"
+          }
+        },
+        {
+          "name": "updatedAt",
+          "isReturnable": true,
+          "datePropertyOptions": {
+            "operatorOptions": {
+              "operatorName": "updatedat",
+              "lessThanOperatorName": "updatedbefore",
+              "greaterThanOperatorName": "updatedafter"
+            }
+          },
+          "displayOptions": {
+            "displayLabel": "Last updated"
+          }
+        }
+      ]
+    },
+    {
+      "name": "file",
+      "options": {
+        "displayOptions": {
+          "objectDisplayLabel": "File",
+          "metalines": [
+          ]
+        }
+      },
+      "propertyDefinitions": [
+        {
+          "name": "path",
+          "isReturnable": true,
+          "textPropertyOptions": {
+            "retrievalImportance": {
+              "importance": "HIGHEST"
+            },
+            "operatorOptions": {
+              "operatorName": "path"
+            }
+          },
+          "displayOptions": {
+            "displayLabel": "Path"
+          }
+        },
+        {
+          "name": "language",
+          "isReturnable": true,
+          "isFacetable": true,
+          "textPropertyOptions": {
+            "retrievalImportance": {
+              "importance": "HIGHEST"
+            },
+            "operatorOptions": {
+              "operatorName": "language"
+            }
+          },
+          "displayOptions": {
+            "displayLabel": "Language"
+          }
+        }
+      ]
+    }
+  ]
+}

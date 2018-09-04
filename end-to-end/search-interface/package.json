@@ -1,0 +1,14 @@
+{
+  "name": "cloud-search-tutorial-search-interface",
+  "version": "1.0.0",
+  "description": "Sample web interface for the Cloud Search tutorial",
+  "main": "index.js",
+  "scripts": {
+    "start": "superstatic --port 8080"
+  },
+  "author": "",
+  "license": "Apache-2.0",
+  "dependencies": {
+    "superstatic": "^6.0.1"
+  }
+}
