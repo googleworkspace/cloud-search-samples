@@ -1,0 +1,8 @@
+# Maps users to their external identity. Each row is a pair of email
+# addresses followed by the value of the external ID to associate with them.
+#
+# In this example users are mapped to a numeric ID which can then be used
+# to identify users in Cloud Search ACLs
+user1@example.com, 10001
+user2@example.com, 10002
+user3@example.com, 10003

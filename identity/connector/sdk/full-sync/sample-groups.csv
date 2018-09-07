@@ -1,0 +1,12 @@
+# Externally managed group rosters. Each row represents a group and its
+# members. User and Google Group members are identified by their email
+# address. To include an external group as a member, prefix the group
+# name with gid:
+#
+# In this example, the first 4 regional sales groups have users as members.
+# The all-sales groups is a roll-up of the other groups
+sales-na, user1@example.com, user2@example.com
+sales-eu, user4@example.com, user3@example.com
+sales-latam, user5@example.com
+sales-apac, user6@example.com
+all-sales, gid:sales-na, gid:sales-eu, gid:sales-latam, gid:sales-apac
