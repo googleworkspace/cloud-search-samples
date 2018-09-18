@@ -2,8 +2,8 @@
   padding: 20px;
 }
 
-.header {
-  width: 100%;
+#header {
+  flex: 0 0 100%;
   display: flex;
   justify-content: flex-end;
 }
@@ -18,4 +18,29 @@
 
 #search_results .cloudsearch_result_count_container {
   padding-left: 0;
+}
+
+#facet_results .cloudsearch_facet_result_operator_name {
+  font-weight: bold;
+}
+
+#facet_results .cloudsearch_facet_bucket_value {
+  margin-left: 8px;
+}
+
+#app {
+  display: flex;
+  flex-wrap: wrap;
+}
+
+#search_bar {
+  flex: 0 0 100%;
+}
+
+#facet_results {
+  flex: 0 1 20%;
+}
+
+#search_results {
+  flex: 0 1 80%;
 }

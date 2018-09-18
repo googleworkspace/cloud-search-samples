@@ -1,8 +1,8 @@
 // Update the client ID and search app ID for your deployment.
 // [START cloud_search_github_tutorial_search_config]
 let searchConfig = {
-  "clientId": "[client-id]",
-  "searchAppId": "[application-id]"
+  clientId: "[client-id]",
+  searchAppId: "[application-id]"
 };
 // [END cloud_search_github_tutorial_search_config]
 
@@ -13,7 +13,7 @@ let resultsContainer;
  * Load the cloud search widget & auth libraries. Runs after
  * the initial gapi bootstrap library is ready.
  */
-// [START cloud_search_github_tutorial_esw_load]
+ // [START cloud_search_github_tutorial_esw_load]
 function onLoad() {
   gapi.load('client:auth2:cloudsearch-widget', initializeApp)
 }
@@ -23,7 +23,7 @@ function onLoad() {
  * Initialize the app after loading the Google API client &
  * Cloud Search widget.
  */
-// [START cloud_search_github_tutorial_init_app]
+ // [START cloud_search_github_tutorial_init_app]
 async function initializeApp() {
   await gapi.auth2.init({
     'clientId': searchConfig.clientId,
@@ -45,7 +45,7 @@ async function initializeApp() {
   onSignInChanged(auth.isSignedIn.get()); // Trigger with current status
 
   // Connect sign-in/sign-out buttons
-  document.getElementById("sign-in").onclick = (e) => auth.signIn();
+  document.getElementById("sign-in").onclick = (e) =>  auth.signIn();
   document.getElementById("sign-out").onclick = (e) => auth.signOut();
   // [END cloud_search_github_tutorial_init_auth]
 
@@ -54,7 +54,9 @@ async function initializeApp() {
   resultsContainer = new gapi.cloudsearch.widget.resultscontainer.Builder()
     .setSearchApplicationId(searchConfig.searchAppId)
     .setSearchResultsContainerElement(document.getElementById('search_results'))
+    .setFacetResultsContainerElement(document.getElementById('facet_results'))
     .build();
+
   const searchBox = new gapi.cloudsearch.widget.searchbox.Builder()
     .setSearchApplicationId(searchConfig.searchAppId)
     .setInput(document.getElementById('search_input'))

@@ -709,6 +709,9 @@ public class GithubRepository implements Repository {
    * @return PushItem operation
    */
   private boolean canSkipIndexing(Item previousItem, String currentHash) {
+    if (previousItem.getStatus() == null || previousItem.getMetadata() == null) {
+      return false;
+    }
     String status = previousItem.getStatus().getCode();
     String previousHash = previousItem.getMetadata().getHash();
     return "ACCEPTED".equals(status)
