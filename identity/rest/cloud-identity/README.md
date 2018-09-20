@@ -1,10 +1,10 @@
-# Updating schemas
+# Cloud identity samples
 
 [![Open in Cloud Shell][cloudshell-badge]][cloudshell-open]
 
 [Google Cloud Search][cloud-search] allows enterprises to index and search
 for information across a wide variety of data sources. These sample
-Java applications demonstrate how to [manage datasource schemas][schema-guide]
+Java applications demonstrate how to [manage identities][identity-guide]
 using the [Google APIs Client Library for Java][google-api-java].
 
 ## Set up the samples
@@ -45,5 +45,5 @@ mvn exec:java -Dexec.mainClass=com.google.cloudsearch.samples.Main \
 [create-datasource]: https://support.google.com/a/answer/7430822?pli=1
 [maven-install]: http://maven.apache.org/install.html
 [set-credentials]: https://cloud.google.com/docs/authentication/getting-started
-[schema-guide]: https://developers.google.com/cloud-search/docs/guides/schema-guide
+[identity-guide]: https://developers.google.com/cloud-search/docs/guides/identity-mapping
 [create-identity-source]: https://support.google.com/a/answer/7430822?pli=1
