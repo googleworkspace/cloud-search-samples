@@ -1,0 +1,20 @@
+.content {
+  padding: 20px;
+  display: flex;
+  flex-wrap: wrap;
+}
+
+.my_suggestion {
+  padding: 10px 10px 10px 10px;
+}
+.my_result {
+  padding: 10px 10px 10px 10px;
+}
+
+#search_bar {
+  flex: 0 0 100%;
+}
+
+#search_results {
+  flex: 0 1 80%;
+}

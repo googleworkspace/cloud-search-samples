@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Cloud Search Widget - Basic usage</title>
+    <meta charset='utf-8' />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="//cdn.rawgit.com/necolas/normalize.css/master/normalize.css">
+    <link rel="stylesheet" href="//cdn.rawgit.com/milligram/milligram/master/dist/milligram.min.css">
+    <link rel="stylesheet" href="with_custom_element/app.css">
+  </head>
+  <body>
+    <div class="content">
+      <div id="search_bar">
+        <div id="suggestions_anchor">
+          <input type="text" id="search_input" placeholder="Search for...">
+        </div>
+      </div>
+      <div id="search_results"></div>
+    </div>
+
+    <template id="suggestion_template">
+      <div class="suggested_query">{{suggested query}}</div>
+    </template>
+
+    <template id="result_template">
+      <div class="query_result">
+        <div class="query_title">
+          <a class="title" href="{{href}}">{{title}}</a>
+        </div>
+        <div class="query_snippet">
+          {{snippet}}
+        </div>
+      </div>
+    </template>
+    <!-- Polyfills for IE11 for fetch/promises -->
+    <script src="https://cdn.jsdelivr.net/npm/promise-polyfill@8/dist/polyfill.min.js"></script>
+    <script src="https://unpkg.com/unfetch/polyfill"></script>
+
+    <!-- Script for this app -->
+    <script src="with_custom_element/app.js"></script>
+
+    <!-- Google API loader -->
+    <script src="https://apis.google.com/js/api.js?mods=enable_cloud_search_widget&onload=onLoad" async defer></script>
+  </body>
+</html>

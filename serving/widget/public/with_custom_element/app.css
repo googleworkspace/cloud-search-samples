@@ -1,0 +1,17 @@
+.content {
+  padding: 20px;
+  display: flex;
+  flex-wrap: wrap;
+}
+
+.query_result {
+  padding-top: 10px;
+}
+
+#search_bar {
+  flex: 0 0 100%;
+}
+
+#search_results {
+  flex: 0 1 80%;
+}
