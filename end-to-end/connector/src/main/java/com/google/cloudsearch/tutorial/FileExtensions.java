@@ -12,6 +12,8 @@ import java.util.Map;
  * faceting in Cloud Search.
  */
 public class FileExtensions {
+  private static final String DEFAULT_LANGUAGE = "Other";
+
   private static Map<String, String> extensionsToLanguage = new HashMap<>();
 
   static {
@@ -42,6 +44,6 @@ public class FileExtensions {
    */
   static String getLanguageForFile(String name) {
     String extension = Files.getFileExtension(name).toLowerCase();
-    return extensionsToLanguage.getOrDefault(extension, extension.toUpperCase());
+    return extensionsToLanguage.getOrDefault(extension, DEFAULT_LANGUAGE);
   }
 }

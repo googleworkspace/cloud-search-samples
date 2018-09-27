@@ -117,7 +117,7 @@ public class SchemaTool {
     while (operation.getDone() == null || operation.getDone() == false) {
       // Wait before polling again
       Thread.sleep(OPERATION_POLL_INTERVAL);
-      System.err.printf("Fetchhing operation: %s\n", operation.getName());
+      System.out.printf("Fetching operation: %s\n", operation.getName());
       operation = cloudSearch.operations().get(operation.getName()).execute();
     }
 

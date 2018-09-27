@@ -8,6 +8,7 @@ import com.google.api.services.cloudsearch.v1.model.Item;
 import com.google.api.services.cloudsearch.v1.model.PushItem;
 import com.google.common.collect.ArrayListMultimap;
 import com.google.common.collect.Multimap;
+import com.google.common.primitives.Longs;
 import com.google.enterprise.cloudsearch.sdk.CheckpointCloseableIterable;
 import com.google.enterprise.cloudsearch.sdk.CheckpointCloseableIterableImpl;
 import com.google.enterprise.cloudsearch.sdk.InvalidConfigurationException;
@@ -360,6 +361,8 @@ public class GithubRepository implements Repository {
 
     // Structured data based on the schema
     Multimap<String, Object> structuredData = ArrayListMultimap.create();
+    structuredData.put("organization", repo.getOwnerName());
+    structuredData.put("repository", repo.getName());
     structuredData.put("stars", repo.getStargazersCount());
     structuredData.put("forks", repo.getForks());
     structuredData.put("openIssues", repo.getOpenIssueCount());
@@ -374,6 +377,7 @@ public class GithubRepository implements Repository {
         .setItemType(IndexingItemBuilder.ItemType.CONTAINER_ITEM)
         .setObjectType("repository")
         .setValues(structuredData)
+        .setVersion(Longs.toByteArray(repo.getUpdatedAt().getTime()))
         .setCreationTime(creationTime)
         .setHash(metadataHash)
         .build();
@@ -417,6 +421,8 @@ public class GithubRepository implements Repository {
 
     // Structured data based on the schema
     Multimap<String, Object> structuredData = ArrayListMultimap.create();
+    structuredData.put("organization", pullRequest.getRepository().getOwnerName());
+    structuredData.put("repository", pullRequest.getRepository().getName());
     structuredData.put("status", pullRequest.getState().name().toLowerCase());
     structuredData.put("openedBy", pullRequest.getUser() != null ?
         pullRequest.getUser().getLogin() : null);
@@ -445,11 +451,12 @@ public class GithubRepository implements Repository {
         .setItemType(IndexingItemBuilder.ItemType.CONTAINER_ITEM)
         .setObjectType("pullRequest")
         .setValues(structuredData)
+        .setVersion(Longs.toByteArray(pullRequest.getUpdatedAt().getTime()))
         .setCreationTime(creationTime)
         .setHash(metadataHash)
         .build();
 
-    // TODO - Index the actual patch/diff
+    // TODO - Index the actual patch/diff?
     // TODO - Render markdown to HTML
     AbstractInputStreamContent content = new ByteArrayContent(
         "text/plain",
@@ -488,6 +495,8 @@ public class GithubRepository implements Repository {
 
     // Structured data based on the schema
     Multimap<String, Object> structuredData = ArrayListMultimap.create();
+    structuredData.put("organization", issue.getRepository().getOwnerName());
+    structuredData.put("repository", issue.getRepository().getName());
     structuredData.put("status", issue.getState().name().toLowerCase());
     structuredData.put("reportedBy", issue.getUser() != null ?
         issue.getUser().getLogin() : null);
@@ -516,6 +525,7 @@ public class GithubRepository implements Repository {
         .setItemType(IndexingItemBuilder.ItemType.CONTAINER_ITEM)
         .setObjectType("issue")
         .setValues(structuredData)
+        .setVersion(Longs.toByteArray(issue.getUpdatedAt().getTime()))
         .setCreationTime(creationTime)
         .setHash(metadataHash)
         .build();
@@ -557,6 +567,8 @@ public class GithubRepository implements Repository {
 
     // Structured data based on the schema
     Multimap<String, Object> structuredData = ArrayListMultimap.create();
+    structuredData.put("organization", content.getOwner().getOwnerName());
+    structuredData.put("repository", content.getOwner().getName());
     structuredData.put("path", content.getPath());
     structuredData.put("language", programmingLanguage);
 
@@ -567,6 +579,7 @@ public class GithubRepository implements Repository {
         .setItemType(IndexingItemBuilder.ItemType.CONTAINER_ITEM)
         .setObjectType("file")
         .setValues(structuredData)
+        .setVersion(Longs.toByteArray(System.currentTimeMillis()))
         .setHash(content.getSha())
         .build();
 

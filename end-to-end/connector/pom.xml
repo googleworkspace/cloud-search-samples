@@ -24,16 +24,6 @@
     Sample connector using the Cloud Search Connector SDK
   </description>
 
-  <!--
-    The parent pom defines common style checks and testing strategies for our tutorial.
-    Removing or replacing it should not affect the execution of the tutorial in anyway.
-  -->
-  <parent>
-    <groupId>com.google.cloud.samples</groupId>
-    <artifactId>shared-configuration</artifactId>
-    <version>1.0.9</version>
-  </parent>
-
   <properties>
     <maven.compiler.target>1.8</maven.compiler.target>
     <maven.compiler.source>1.8</maven.compiler.source>
@@ -48,6 +38,12 @@
       <groupId>org.kohsuke</groupId>
       <artifactId>github-api</artifactId>
       <version>1.93</version>
+    </dependency>
+    <!-- Explicitly add for Java 9+ -->
+    <dependency>
+      <groupId>com.sun.activation</groupId>
+      <artifactId>javax.activation</artifactId>
+      <version>1.2.0</version>
     </dependency>
     <!-- Test dependencies -->
     <dependency>
