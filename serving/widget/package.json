@@ -1,0 +1,14 @@
+{
+  "name": "cloud-search-widget-samples",
+  "version": "1.0.0",
+  "description": "Examples for the Cloud Search widget",
+  "main": "index.js",
+  "scripts": {
+    "start": "superstatic --port 8080"
+  },
+  "author": "",
+  "license": "Apache-2.0",
+  "dependencies": {
+    "superstatic": "^6.0.1"
+  }
+}
