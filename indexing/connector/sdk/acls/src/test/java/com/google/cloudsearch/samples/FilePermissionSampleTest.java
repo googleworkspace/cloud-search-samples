@@ -1,4 +1,3 @@
-
 /*
  * Copyright 2018 Google LLC
  *
@@ -171,5 +170,3 @@ public class FilePermissionSampleTest {
         .build();
   }
 }
-
-
