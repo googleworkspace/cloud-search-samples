@@ -1,24 +1,8 @@
-/*
- * Copyright 2018 Google LLC
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- *     https://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- */
-
 // Update the client ID and search app ID for your deployment.
 // [START cloud_search_github_tutorial_search_config]
 let searchConfig = {
   clientId: "[client-id]",
-  searchAppId: "[application-id]"
+  searchAppId: "searchapplications/[application-id]"
 };
 // [END cloud_search_github_tutorial_search_config]
 
@@ -42,8 +26,8 @@ function onLoad() {
  // [START cloud_search_github_tutorial_init_app]
 async function initializeApp() {
   await gapi.auth2.init({
-    'clientId': searchConfig.clientId,
-    'scope': 'https://www.googleapis.com/auth/cloud_search.query'
+      'clientId': searchConfig.clientId,
+      'scope': 'https://www.googleapis.com/auth/cloud_search.query'
   });
 
   // [START cloud_search_github_tutorial_init_auth]
