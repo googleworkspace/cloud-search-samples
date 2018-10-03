@@ -46,6 +46,7 @@ import org.kohsuke.github.GHPullRequest;
 import org.kohsuke.github.GHRepository;
 import org.kohsuke.github.GitHub;
 import org.kohsuke.github.GitHubBuilder;
+import org.kohsuke.github.HttpException;
 
 import javax.activation.FileTypeMap;
 import java.io.FileNotFoundException;
@@ -58,6 +59,7 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.logging.Logger;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -124,13 +126,13 @@ public class GithubRepository implements Repository {
       );
     }
 
-    if (user.get() == null || user.get().isEmpty()) {
+    if (user.get() == null || user.get().trim().isEmpty()) {
       throw new InvalidConfigurationException(
           "No github user configured. Set 'github.user'" +
               " in the configuration to a valid github account.");
     }
 
-    if (token.get() == null || token.get().isEmpty()) {
+    if (token.get() == null || token.get().trim().isEmpty()) {
       throw new InvalidConfigurationException(
           "No github access token configured. Set" +
               " 'github.token' in the configuration to a valid github account.");
@@ -139,11 +141,18 @@ public class GithubRepository implements Repository {
     if (github == null ) {
       try {
         github = new GitHubBuilder()
-            .withPassword(user.get(), token.get())
+            .withPassword(user.get().trim(), token.get().trim())
             .build();
       } catch (IOException e) {
         throw new InvalidConfigurationException("Unable to connect to GitHub", e);
       }
+    }
+
+    try {
+      // Validate connection
+      github.getMyself();
+    } catch (IOException e) {
+      throw new InvalidConfigurationException("Unable to connect to GitHub", e);
     }
   }
 
@@ -198,10 +207,7 @@ public class GithubRepository implements Repository {
       try {
         repositories = scanRepositories();
       } catch (IOException e) {
-        throw new RepositoryException.Builder()
-            .setErrorMessage("Unable to discover repositories")
-            .setCause(e)
-            .build();
+        throw toRepositoryError(e, Optional.of("Unable to scan repositories"));
       }
     }
     // [END cloud_search_github_tutorial_decode_checkpoint]
@@ -233,11 +239,7 @@ public class GithubRepository implements Repository {
     } catch (IOException e) {
       String errorMessage = String.format("Unable to traverse repo: %s",
           repositoryToIndex);
-      throw new RepositoryException.Builder()
-          .setErrorMessage(errorMessage)
-          .setCause(e)
-          .setErrorType(RepositoryException.ErrorType.SERVER_ERROR)
-          .build();
+      throw toRepositoryError(e, Optional.of(errorMessage));
     }
   }
   // [END cloud_search_github_tutorial_get_ids]
@@ -285,11 +287,7 @@ public class GithubRepository implements Repository {
     } catch (IOException e) {
       String errorMessage = String.format("Unable to retrieve item: %s",
           item.getName());
-      throw new RepositoryException.Builder()
-          .setErrorMessage(errorMessage)
-          .setCause(e)
-          .setErrorType(RepositoryException.ErrorType.SERVER_ERROR)
-          .build();
+      throw toRepositoryError(e, Optional.of(errorMessage));
     }
   }
   // [END cloud_search_github_tutorial_get_doc]
@@ -602,6 +600,7 @@ public class GithubRepository implements Repository {
     // Index the file content too
     String mimeType = FileTypeMap.getDefaultFileTypeMap()
         .getContentType(content.getName());
+    System.out.println("MT= " + mimeType);
     AbstractInputStreamContent fileContent = new InputStreamContent(
         mimeType, content.read())
         .setLength(content.getSize())
@@ -814,5 +813,33 @@ public class GithubRepository implements Repository {
    */
   public void setGitHub(GitHub client) {
     this.github = client;
+  }
+
+  private RepositoryException toRepositoryError(IOException e, Optional<String> message) {
+    if (e instanceof HttpException) {
+      int code = ((HttpException) e).getResponseCode();
+      String responseMessage = ((HttpException) e).getResponseMessage();
+      RepositoryException.ErrorType type = RepositoryException.ErrorType.SERVER_ERROR;
+
+      if (code == 401) {
+        type = RepositoryException.ErrorType.AUTHENTICATION_ERROR;
+      } else if (code == 403 || code == 429) {
+        type = RepositoryException.ErrorType.QUOTA_EXCEEDED;
+      } else {
+        type = RepositoryException.ErrorType.SERVER_ERROR;
+      }
+      return new RepositoryException.Builder()
+          .setErrorMessage(message.orElse(responseMessage))
+          .setCause(e)
+          .setErrorCode(code)
+          .setErrorType(type)
+          .build();
+    } else {
+      return new RepositoryException.Builder()
+          .setErrorMessage(message.orElse(e.getMessage()))
+          .setCause(e)
+          .setErrorType(RepositoryException.ErrorType.SERVER_ERROR)
+          .build();
+    }
   }
 }
