@@ -18,3 +18,11 @@
 #search_results {
   flex: 0 1 80%;
 }
+
+#facet_results .cloudsearch_facet_result_operator_name {
+  font-weight: bold;
+}
+
+#facet_results .cloudsearch_facet_bucket_value {
+  margin-left: 8px;
+}

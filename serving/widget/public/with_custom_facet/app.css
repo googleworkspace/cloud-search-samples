@@ -7,6 +7,7 @@
 .my_suggestion {
   padding: 10px 10px 10px 10px;
 }
+
 .my_result {
   padding: 10px 10px 10px 10px;
 }
@@ -19,10 +20,11 @@
   flex: 0 1 80%;
 }
 
-#facet_results .cloudsearch_facet_result_operator_name {
-  font-weight: bold;
+.facet_label {
+  font-weight:bold;
+  padding-bottom: 12px;
 }
 
-#facet_results .cloudsearch_facet_bucket_value {
-  margin-left: 8px;
+.facet_label:not(first-of-type) {
+  padding-top: 12px;
 }

@@ -41,10 +41,26 @@
   flex: 0 0 100%;
 }
 
-#facet_results {
+#facet_results:not(:empty) {
   flex: 0 1 20%;
 }
 
 #search_results {
   flex: 0 1 80%;
+}
+
+#search_results .cloudsearch_result_context_line {
+  padding-left: 0;
+}
+
+#search_results .cloudsearch_result_meta_line {
+  padding-left: 0;
+}
+
+#facet_results .cloudsearch_facet_result_operator_name {
+  font-weight: bold;
+}
+
+#facet_results .cloudsearch_facet_bucket_value {
+  margin-left: 8px;
 }

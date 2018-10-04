@@ -38,7 +38,6 @@ function initializeApp() {
     var resultsContainer = new gapi.cloudsearch.widget.resultscontainer.Builder()
       .setSearchApplicationId(searchConfig.searchAppId)
       .setSearchResultsContainerElement(document.getElementById('search_results'))
-      .setFacetResultsContainerElement(document.getElementById('facet_results'))
       .build();
 
     // Build the search box and bind to DOM elements.
