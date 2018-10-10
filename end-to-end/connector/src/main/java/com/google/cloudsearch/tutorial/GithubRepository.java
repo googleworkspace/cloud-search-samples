@@ -600,7 +600,6 @@ public class GithubRepository implements Repository {
     // Index the file content too
     String mimeType = FileTypeMap.getDefaultFileTypeMap()
         .getContentType(content.getName());
-    System.out.println("MT= " + mimeType);
     AbstractInputStreamContent fileContent = new InputStreamContent(
         mimeType, content.read())
         .setLength(content.getSize())
