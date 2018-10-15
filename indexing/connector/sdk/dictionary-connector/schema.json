@@ -1,0 +1,27 @@
+{
+  "objectDefinitions": [
+    {
+      "name": "_dictionaryEntry",
+      "propertyDefinitions": [
+        {
+          "name": "_term",
+          "isRepeatable": false,
+          "textPropertyOptions": {
+            "operatorOptions": {
+              "operatorName": "not_used"
+            }
+          }
+        },
+        {
+          "name": "_synonym",
+          "isRepeatable": true,
+          "textPropertyOptions": {
+            "operatorOptions": {
+              "operatorName": "not_used"
+            }
+          }
+        }
+      ]
+    }
+  ]
+}
