@@ -189,7 +189,7 @@ public class ListTraversalSample {
             Collections.singletonList(pushOperation))
         .build();
       return iterator;
-      // [START cloud_search_content_sdk_checkpoint_iterator]
+      // [END cloud_search_content_sdk_checkpoint_iterator]
     }
 
     /**
