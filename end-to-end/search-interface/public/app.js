@@ -19,11 +19,11 @@ function onLoad() {
 }
 // [END cloud_search_tutorial_on_load]
 
+// [START cloud_search_tutorial_init_app]
 /**
  * Initialize the app after loading the Google API client &
  * Cloud Search widget.
  */
- // [START cloud_search_github_tutorial_init_app]
 async function initializeApp() {
   await gapi.auth2.init({
       'clientId': searchConfig.clientId,
