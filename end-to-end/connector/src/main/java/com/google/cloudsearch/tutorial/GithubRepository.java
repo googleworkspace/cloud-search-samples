@@ -158,6 +158,7 @@ public class GithubRepository implements Repository {
     }
   }
 
+  // [START cloud_search_tutorial_get_ids]
   /**
    * Gets all of the existing item IDs from the data repository. While
    * multiple repositories are supported, only one repository is traversed
@@ -184,7 +185,6 @@ public class GithubRepository implements Repository {
    * @param checkpoint value defined and maintained by this connector
    * @return this is typically a {@link PushItems} instance
    */
-  // [START cloud_search_github_tutorial_get_ids]
   @Override
   public CheckpointCloseableIterable<ApiOperation> getIds(byte[] checkpoint)
       throws RepositoryException {
@@ -244,9 +244,10 @@ public class GithubRepository implements Repository {
       throw toRepositoryError(e, Optional.of(errorMessage));
     }
   }
-  // [END cloud_search_github_tutorial_get_ids]
+  // [END cloud_search_tutorial_get_ids]
 
 
+  // [START cloud_search_tutorial_get_doc]
   /**
    * Gets a single data repository item and indexes it if required.
    *
@@ -259,7 +260,6 @@ public class GithubRepository implements Repository {
    * {@link ApiOperation} is returned:
    * {@link RepositoryDoc}, {@link DeleteItem}, or {@link PushItem}
    */
-  // [START cloud_search_github_tutorial_get_doc]
   @Override
   public ApiOperation getDoc(Item item) throws RepositoryException {
     log.info(() -> String.format("Processing item: %s ", item.getName()));
@@ -292,7 +292,7 @@ public class GithubRepository implements Repository {
       throw toRepositoryError(e, Optional.of(errorMessage));
     }
   }
-  // [END cloud_search_github_tutorial_get_doc]
+  // [END cloud_search_tutorial_get_doc]
 
   /**
    * Retrieves an item from the GitHub API based on the path. Expects paths
@@ -557,6 +557,7 @@ public class GithubRepository implements Repository {
         .build();
   }
 
+  // [START cloud_search_tutorial_index_content_item]
   /**
    * Build the ApiOperation to index a content item (file).
    *
@@ -612,6 +613,7 @@ public class GithubRepository implements Repository {
         .setRequestMode(IndexingService.RequestMode.SYNCHRONOUS)
         .build();
   }
+  // [END cloud_search_tutorial_index_content_item]
 
   /**
    * Collects the names of repositories to index. Expands
@@ -638,6 +640,7 @@ public class GithubRepository implements Repository {
   }
 
 
+  // [START cloud_search_tutorial_collect_repository_items]
   /**
    * Fetch IDs to  push in to the queue for all items in the repository.
    * Currently captures issues & content in the master branch.
@@ -646,7 +649,6 @@ public class GithubRepository implements Repository {
    * @return Items to push into the queue for later indexing
    * @throws IOException if error reading issues
    */
-  // [START cloud_search_github_tutorial_collect_repository_items]
   private Collection<ApiOperation> collectRepositoryItems(String name)
       throws IOException {
     List<ApiOperation> operations = new ArrayList<>();
@@ -667,7 +669,7 @@ public class GithubRepository implements Repository {
     operations.add(collectContent(repo));
     return operations;
   }
-  // [END cloud_search_github_tutorial_collect_repository_items]
+  // [END cloud_search_tutorial_collect_repository_items]
 
   /**
    * Fetch all issues for the repository. Includes pull requests.

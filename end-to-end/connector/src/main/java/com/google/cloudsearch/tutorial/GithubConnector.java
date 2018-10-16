@@ -13,6 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+
 package com.google.cloudsearch.tutorial;
 
 import com.google.enterprise.cloudsearch.sdk.indexing.IndexingApplication;
@@ -67,6 +68,7 @@ import com.google.enterprise.cloudsearch.sdk.indexing.template.Repository;
  * </pre>
  */
 public class GithubConnector {
+  // [START cloud_search_tutorial_main]
   /**
    * Main entry point for the connector. Creates and starts an indexing
    * application using the {@code ListingConnector} template and the sample's
@@ -75,7 +77,6 @@ public class GithubConnector {
    * @param args program command line arguments
    * @throws InterruptedException thrown if an abort is issued during initialization
    */
-  // [START cloud_search_github_tutorial_main]
   public static void main(String[] args) throws InterruptedException {
     Repository repository = new GithubRepository();
     IndexingConnector connector = new ListingConnector(repository);
@@ -83,5 +84,5 @@ public class GithubConnector {
         .build();
     application.start();
   }
-  // [END cloud_search_github_tutorial_main]
+  // [END cloud_search_tutorial_main]
 }

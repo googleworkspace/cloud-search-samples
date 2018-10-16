@@ -9,15 +9,15 @@ let searchConfig = {
 // Reference to the results container to clear results on login/logout changes.
 let resultsContainer;
 
+// [START cloud_search_tutorial_on_load]
 /**
  * Load the cloud search widget & auth libraries. Runs after
  * the initial gapi bootstrap library is ready.
  */
- // [START cloud_search_github_tutorial_esw_load]
 function onLoad() {
-  gapi.load('client:auth2:cloudsearch-widget', initializeApp)
+  qgapi.load('client:auth2:cloudsearch-widget', initializeApp)
 }
-// [END cloud_search_github_tutorial_esw_load]
+// [END cloud_search_tutorial_on_load]
 
 /**
  * Initialize the app after loading the Google API client &
@@ -30,7 +30,7 @@ async function initializeApp() {
       'scope': 'https://www.googleapis.com/auth/cloud_search.query'
   });
 
-  // [START cloud_search_github_tutorial_init_auth]
+  // [START cloud_search_tutorial_init_auth]
   let auth = gapi.auth2.getAuthInstance();
 
   // Watch for sign in status changes to update the UI appropriately
@@ -47,9 +47,10 @@ async function initializeApp() {
   // Connect sign-in/sign-out buttons
   document.getElementById("sign-in").onclick = (e) =>  auth.signIn();
   document.getElementById("sign-out").onclick = (e) => auth.signOut();
-  // [END cloud_search_github_tutorial_init_auth]
+  // [END cloud_search_tutorial_init_auth]
 
-  // [START cloud_search_github_tutorial_init_widget]
+  // [START_EXCLUDE]
+  // [START cloud_search_tutorial_init_widget]
   gapi.config.update('cloudsearch.config/apiVersion', 'v1');
   resultsContainer = new gapi.cloudsearch.widget.resultscontainer.Builder()
     .setSearchApplicationId(searchConfig.searchAppId)
@@ -63,6 +64,8 @@ async function initializeApp() {
     .setAnchor(document.getElementById('suggestions_anchor'))
     .setResultsContainer(resultsContainer)
     .build();
-  // [END cloud_search_github_tutorial_init_widget]
+  // [END cloud_search_tutorial_init_widget]
+  // [END_EXCLUDE]
+
 }
-// [END cloud_search_github_tutorial_init_app]
+// [END cloud_search_tutorial_init_app]

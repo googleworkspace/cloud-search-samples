@@ -10,12 +10,14 @@
 
   </head>
   <body>
+    <!-- [START cloud_search_tutorial_html] -->
     <div class="content">
       <div id="app" hidden>
         <div id="header">
           <button id="sign-out">Sign-out</button>
         </div>
-        <!-- [START cloud_search_github_tutorial_esw_html] -->
+        <!-- [START_EXCLUDE] -->
+        <!-- [START cloud_search_tutorial_search_html] -->
         <div id="search_bar">
           <div>
             <div id="suggestions_anchor">
@@ -25,7 +27,8 @@
         </div>
         <div id="facet_results" ></div>
         <div id="search_results" ></div>
-        <!-- [END cloud_search_github_tutorial_esw_html] -->
+        <!-- [END cloud_search_tutorial_search_html] -->
+        <!-- [END_EXCLUDE] -->
       </div>
       <div id="welcome" hidden>
         <h1>Cloud Search Tutorial</h1>
@@ -33,7 +36,10 @@
         <button id="sign-in">Sign-in</button>
       </div>
     </div>
+    <!-- [END cloud_search_tutorial_html] -->
     <script src="app.js"></script>
+    <!-- [START cloud_search_tutorial_script_loader] -->
     <script src="https://apis.google.com/js/api.js?mods=enable_cloud_search_widget&onload=onLoad" async defer></script>
+    <!-- [END cloud_search_tutorial_script_loader] -->
   </body>
 </html>
