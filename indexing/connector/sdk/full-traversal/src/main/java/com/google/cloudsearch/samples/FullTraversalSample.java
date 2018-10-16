@@ -112,11 +112,13 @@ public class FullTraversalSample {
      *
      * @param context the {@link RepositoryContext}, not used here
      */
+    // [START cloud_search_content_sdk_init]
     @Override
     public void init(RepositoryContext context) {
       log.info("Initializing repository");
       numberOfDocuments = Configuration.getInteger("sample.documentCount", 10).get();
     }
+    // [END cloud_search_content_sdk_init]
 
     /**
      * Performs any data repository shut down code here.

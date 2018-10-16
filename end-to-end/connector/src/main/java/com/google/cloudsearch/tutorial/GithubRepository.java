@@ -106,10 +106,12 @@ public class GithubRepository implements Repository {
   public void init(RepositoryContext context) throws StartupException {
     log.info("Initializing repository");
 
+    // [START cloud_search_content_sdk_multi_config]
     ConfigValue<List<String>> repos = Configuration.getMultiValue(
         "github.repos",
         Collections.emptyList(),
         Configuration.STRING_PARSER);
+    // [END cloud_search_content_sdk_multi_config]
 
     ConfigValue<String> user = Configuration.getString(
         "github.user", null);
