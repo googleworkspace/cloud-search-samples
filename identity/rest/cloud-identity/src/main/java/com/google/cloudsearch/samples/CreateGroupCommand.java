@@ -38,6 +38,7 @@ class CreateGroupCommand implements Runnable {
   private String groupName;
 
   public void run() {
+    // [START cloud_identity_create_group]
     String namespace = "identitysources/" + idSource;
     Group group = new Group()
         .setGroupKey(new EntityKey().setNamespace(namespace).setId(groupId))
@@ -61,14 +62,17 @@ class CreateGroupCommand implements Runnable {
         System.out.printf("Group: %s\n",
             createOperation.getResponse().toString());
       } else {
-        // TODO: Handle case where operation not yet complete, poll for
+        // Handle case where operation not yet complete, poll for
         // completion. API is currently synchronous and all operations return
         // as completed.
+        // [START_EXCLUDE]
         System.out.printf("Response: %s\n", createOperation.toPrettyString());
+        // [END_EXCLUDE]
       }
     } catch (Exception e) {
       System.err.printf("Unable to create group: %s", e.getMessage());
       e.printStackTrace(System.err);
     }
+    // [END cloud_identity_create_group]
   }
 }

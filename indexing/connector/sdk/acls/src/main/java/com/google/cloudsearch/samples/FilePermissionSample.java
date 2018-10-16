@@ -75,6 +75,8 @@ public class FilePermissionSample {
       System.out.println("Unable to read file ACL");
     }
   }
+
+  // [START cloud_search_content_sdk_posix_acl]
   /**
    * Sample for mapping permissions from a source repository to Cloud Search
    * ACLs. In this example, POSIX file permissions are used a the source
@@ -83,7 +85,6 @@ public class FilePermissionSample {
    * @return Acl
    * @throws IOException if unable to read file permissions
    */
-  // [START cloud_search_posix_acl]
   static Acl mapPosixFilePermissionToCloudSearchAcl(Path pathToFile) throws IOException {
     // Id of the identity source for external user/group IDs. Shown here,
     // but may be omitted in the SDK as it is automatically applied
@@ -102,11 +103,9 @@ public class FilePermissionSample {
     }
 
     PosixFileAttributes attrs = attributeView.readAttributes();
-
-    // List of users to grant access to
-    List<Principal> readers = new ArrayList<>();
-
-    // Owner, for search quality and owner: filters
+    // [START_EXCLUDE]
+    // [START cloud_search_content_sdk_posix_acl_owner]
+    // Owner, for search quality.
     // Note that for principals the name is not the primary
     // email address in Cloud Directory, but the local ID defined
     // by the OS. Users and groups must be referred to by their
@@ -114,6 +113,11 @@ public class FilePermissionSample {
     List<Principal> owners = Collections.singletonList(
         Acl.getUserPrincipal(attrs.owner().getName(), identitySourceId)
     );
+    // [END cloud_search_content_sdk_posix_acl_owner]
+
+    // [START cloud_search_content_sdk_posix_acl_reader]
+    // List of users to grant access to
+    List<Principal> readers = new ArrayList<>();
 
     // Add owner, group, others to readers list if permissions
     // exist. For this example, other is mapped to everyone
@@ -122,25 +126,33 @@ public class FilePermissionSample {
     if (permissions.contains(PosixFilePermission.OWNER_READ)) {
       readers.add(Acl.getUserPrincipal(attrs.owner().getName(), identitySourceId));
     }
+    // [START cloud_search_content_sdk_posix_acl_group]
     if (permissions.contains(PosixFilePermission.GROUP_READ)) {
       String externalGroupName = attrs.group().getName();
       Principal group = Acl.getGroupPrincipal(externalGroupName, identitySourceId);
       readers.add(group);
     }
+    // [END cloud_search_content_sdk_posix_acl_group]
     if (permissions.contains(PosixFilePermission.OTHERS_READ)) {
       Principal everyone = Acl.getCustomerPrincipal();
       readers.add(everyone);
     }
+    // [END cloud_search_content_sdk_posix_acl_reader]
 
+    // [START cloud_search_content_sdk_posix_acl_build]
     // Build the Cloud Search ACL. Note that inheritance of permissions
     // from parents is omitted. See `setInheritFrom()` and `setInheritanceType()`
     // methods on the builder if required by your implementation.
-    return new Acl.Builder()
+    Acl acl = new Acl.Builder()
         .setReaders(readers)
         .setOwners(owners)
         .build();
+    // [END cloud_search_content_sdk_posix_acl_build]
+    return acl;
+    // [END_EXCLUDE]
   }
-  // [END cloud_search_posix_acl]
+  // [END cloud_search_content_sdk_posix_acl]
+]
 
   /**
    * Sample for mapping permissions from a source repository to Cloud Search
