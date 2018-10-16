@@ -14,12 +14,42 @@
  * limitations under the License.
  */
 
+// [START cloud_search_widget_on_load]
 /**
  * Load the cloud search widget & auth libraries. Runs after
  * the initial gapi bootstrap library is ready.
  */
 function onLoad() {
   gapi.load('client:auth2:cloudsearch-widget', initializeApp)
+}
+// [END cloud_search_widget_on_load]
+
+// [START cloud_search_widget_config]
+/**
+ * Client ID from OAuth credentials.
+ */
+var clientId = "...apps.googleusercontent.com";
+
+/**
+ * Full resource name of the search application, such as
+ * "searchapplications/<your-id>".
+ */
+var searchApplicationName = "searchapplications/...";
+// [END cloud_search_widget_config]
+
+/**
+ * Initializes required config parameters from the config.json
+ * file.
+ * @returns Promise
+ */
+function loadConfiguration() {
+  return fetch('/config.json').then(function(response) {
+    return response.json();
+  }).then(function(config) {
+    this.clientId = config.clientId;
+    this.searchApplicationName = config.searchAppId;
+    return config;
+  });
 }
 
 /**
@@ -30,51 +60,57 @@ function initializeApp() {
   var resultsContainer;
 
   // Load client ID & search app.
-  fetch('/config.json').then(function(response) {
-    return response.json();
-  }).then(function(searchConfig) {
+  loadConfiguration().then(function() {
     // Set API version to v1.
     gapi.config.update('cloudsearch.config/apiVersion', 'v1');
 
     // Build the result container and bind to DOM elements.
     resultsContainer = new gapi.cloudsearch.widget.resultscontainer.Builder()
-      .setSearchApplicationId(searchConfig.searchAppId)
+      .setSearchApplicationId(searchApplicationName)
       .setSearchResultsContainerElement(document.getElementById('search_results'))
       .setFacetResultsContainerElement(document.getElementById('facet_results'))
       .build();
 
     // Build the search box and bind to DOM elements.
     var searchBox = new gapi.cloudsearch.widget.searchbox.Builder()
-      .setSearchApplicationId(searchConfig.searchAppId)
+      .setSearchApplicationId(searchApplicationName)
       .setInput(document.getElementById('search_input'))
       .setAnchor(document.getElementById('suggestions_anchor'))
       .setResultsContainer(resultsContainer)
       .build();
-    return searchConfig;
-  }).then(function(searchConfig) {
+  }).then(function() {
     // Init API/oauth client w/client ID.
     return gapi.auth2.init({
-        'clientId': searchConfig.clientId,
+        'clientId': clientId,
         'scope': 'https://www.googleapis.com/auth/cloud_search.query'
     });
   }).then(function() {
+    // [START cloud_search_widget_sign_in]
     // Handle sign-in/sign-out.
     let auth = gapi.auth2.getAuthInstance();
 
     // Watch for sign in status changes to update the UI appropriately.
     let onSignInChanged = (isSignedIn) => {
+      // Update UI to switch between signed in/out states
+      // [START_EXCLUDE]
       document.getElementById("app").hidden = !isSignedIn;
       document.getElementById("welcome").hidden = isSignedIn;
       if (resultsContainer) {
         resultsContainer.clear();
       }
+      // [END_EXCLUDE]
     }
     auth.isSignedIn.listen(onSignInChanged);
     onSignInChanged(auth.isSignedIn.get()); // Trigger with current status.
 
     // Connect sign-in/sign-out buttons.
-    document.getElementById("sign-in").onclick = (e) =>  auth.signIn();
-    document.getElementById("sign-out").onclick = (e) => auth.signOut();
+    document.getElementById("sign-in").onclick = function(e) {
+      auth.signIn();
+    };
+    document.getElementById("sign-out").onclick = function(e) {
+      auth.signOut();
+    };
+    // [END cloud_search_widget_sign_in]
   });
 
 }

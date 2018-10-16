@@ -14,6 +14,7 @@
  * limitations under the License.
  */
 
+// [START cloud_search_widget_on_load]
 /**
  * Load the cloud search widget & auth libraries. Runs after
  * the initial gapi bootstrap library is ready.
@@ -21,7 +22,36 @@
 function onLoad() {
   gapi.load('client:auth2:cloudsearch-widget', initializeApp)
 }
+// [END cloud_search_widget_on_load]
 
+// [START cloud_search_widget_config]
+/**
+ * Client ID from OAuth credentials.
+ */
+var clientId = "...apps.googleusercontent.com";
+
+/**
+ * Full resource name of the search application, such as
+ * "searchapplications/<your-id>".
+ */
+var searchApplicationName = "searchapplications/...";
+// [END cloud_search_widget_config]
+
+/**
+ * Initializes required config parameters from the config.json
+ * file.
+ * @returns Promise
+ */
+function loadConfiguration() {
+  return fetch('/config.json').then(function(response) {
+    return response.json();
+  }).then(function(config) {
+    this.clientId = config.clientId;
+    this.searchApplicationName = config.searchAppId;
+    return config;
+  });
+}
+// [START cloud_search_widget_custom_facet]
 /**
  * Results container adapter that intercepts requests to dynamically
  * change which sources are enabled based on user selection.
@@ -59,6 +89,7 @@ ResultsContainerAdapter.prototype.createFacetResultElement = function(result) {
 
 // Renders a value for user display
 ResultsContainerAdapter.prototype.renderValue = function(value) {
+  // [START_EXCLUDE]
   if (value.stringValue !== undefined) {
     return value.stringValue;
   } else if (value.integerValue !== undefined) {
@@ -76,8 +107,9 @@ ResultsContainerAdapter.prototype.renderValue = function(value) {
   } else {
     throw 'No value present';
   }
+  // [END_EXCLUDE]
 }
-
+// [END cloud_search_widget_custom_facet]
 
 /**
  * Initialize the app after loading the Google API client &
@@ -85,16 +117,14 @@ ResultsContainerAdapter.prototype.renderValue = function(value) {
  */
 function initializeApp() {
   // Load client ID & search app.
-  fetch('/config.json').then(function(response) {
-    return response.json();
-  }).then(function(searchConfig) {
+  loadConfiguration().then(function() {
     // Set API version to v1.
     gapi.config.update('cloudsearch.config/apiVersion', 'v1');
 
     var resultsContainerAdapter = new ResultsContainerAdapter();
     // Build the result container and bind to DOM elements.
     var resultsContainer = new gapi.cloudsearch.widget.resultscontainer.Builder()
-      .setSearchApplicationId(searchConfig.searchAppId)
+      .setSearchApplicationId(searchApplicationName)
       .setAdapter(resultsContainerAdapter)
       .setSearchResultsContainerElement(document.getElementById('search_results'))
       .setFacetResultsContainerElement(document.getElementById('facet_results'))
@@ -102,17 +132,15 @@ function initializeApp() {
 
     // Build the search box and bind to DOM elements.
     var searchBox = new gapi.cloudsearch.widget.searchbox.Builder()
-      .setSearchApplicationId(searchConfig.searchAppId)
+      .setSearchApplicationId(searchApplicationName)
       .setInput(document.getElementById('search_input'))
       .setAnchor(document.getElementById('suggestions_anchor'))
       .setResultsContainer(resultsContainer)
       .build();
-
-    return searchConfig;
-  }).then(function(searchConfig) {
+  }).then(function() {
     // Init API/oauth client w/client ID.
     return gapi.auth2.init({
-        'clientId': searchConfig.clientId,
+        'clientId': clientId,
         'scope': 'https://www.googleapis.com/auth/cloud_search.query'
     });
   });
