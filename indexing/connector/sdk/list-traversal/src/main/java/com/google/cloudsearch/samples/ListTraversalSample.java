@@ -255,11 +255,13 @@ public class ListTraversalSample {
      * @param documentId unique local id for the document
      * @return the fully formed document ready for indexing
      */
-    private ApiOperation buildDocument(int documentId) {
+    private ApiOperation buildDocument(int documentId)
+      // [START cloud_search_content_sdk_domain_acl]
       // Make the document publicly readable within the domain
       Acl acl = new Acl.Builder()
           .setReaders(Collections.singletonList(Acl.getCustomerPrincipal()))
           .build();
+      // [END cloud_search_content_sdk_domain_acl]
 
       // [START cloud_search_content_sdk_build_item]
       // Url is required. Use google.com as a placeholder for this sample.
