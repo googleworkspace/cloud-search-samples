@@ -92,6 +92,7 @@ import java.util.stream.StreamSupport;
  */
 public class IdentityConnectorSample {
 
+  // [START cloud_search_identity_sdk_main]
   /**
    * This sample connector uses the Cloud Search SDK template class for a full
    * sync connector. In the full sync case, the repository is responsible
@@ -108,6 +109,7 @@ public class IdentityConnectorSample {
     IdentityApplication application = new IdentityApplication.Builder(connector, args).build();
     application.start();
   }
+  // [END cloud_search_identity_sdk_main]
 
   /**
    * Sample repository that syncs users and groups from a set of CSV files.
@@ -138,6 +140,7 @@ public class IdentityConnectorSample {
 
     CsvRepository() {}
 
+    // [START cloud_search_identity_sdk_init]
     /**
      * Initializes the repository once the SDK is initialized.
      *
@@ -150,11 +153,13 @@ public class IdentityConnectorSample {
       log.info("Initializing repository");
       this.context = context;
       userMappingCsvPath = Configuration.getString(
-          "sample.usersFile", "users.csv").get();
+          "sample.usersFile", "users.csv").get().trim();
       groupMappingCsvPath = Configuration.getString(
-          "sample.groupsFile", "groups.csv").get();
+          "sample.groupsFile", "groups.csv").get().trim();
     }
+    // [END cloud_search_identity_sdk_init]
 
+    // [START cloud_search_identity_sdk_list_users]
     /**
      * Retrieves all user identity mappings for the identity source. For the
      * full sync connector, the repository must provide a complete snapshot
@@ -199,12 +204,20 @@ public class IdentityConnectorSample {
           users.add(user);
         }
       }
-      return new CheckpointCloseableIterableImpl.Builder<IdentityUser>(users)
-          .setHasMore(false)
-          .setCheckpoint((byte[])null)
-          .build();
+      // [START_EXCLUDE]
+      // [START cloud_search_identity_sdk_user_checkpoint_iterator]
+      CheckpointCloseableIterable<IdentityUser> iterator =
+        new CheckpointCloseableIterableImpl.Builder<IdentityUser>(users)
+            .setHasMore(false)
+            .setCheckpoint((byte[])null)
+            .build();
+      // [END cloud_search_identity_sdk_user_checkpoint_iterator]
+      return iterator;
+      // [END_EXCLUDE]
     }
+    // [END cloud_search_identity_sdk_list_users]
 
+    // [START cloud_search_identity_sdk_list_groups]
     /**
      * Retrieves all group rosters for the identity source. For the
      * full sync connector, the repository must provide a complete snapshot
@@ -238,11 +251,19 @@ public class IdentityConnectorSample {
           groups.add(group);
         }
       }
-      return new CheckpointCloseableIterableImpl.Builder<IdentityGroup>(groups)
-          .setHasMore(false)
-          .setCheckpoint((byte[])null)
-          .build();
+      // [START_EXCLUDE]
+      // [START cloud_search_identity_sdk_group_checkpoint_iterator]
+      CheckpointCloseableIterable<IdentityGroup> iterator =
+         new CheckpointCloseableIterableImpl.Builder<IdentityGroup>(groups)
+            .setHasMore(false)
+            .setCheckpoint((byte[])null)
+            .build();
+      // [END cloud_search_identity_sdk_group_checkpoint_iterator]
+      return iterator;
+      // [END_EXCLUDE]
+
     }
+    // [END cloud_search_identity_sdk_list_groups]
 
     /**
      * Provides group memberships based on the CSV record.
