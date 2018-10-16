@@ -16,7 +16,7 @@
 
 package com.google.cloudsearch.samples;
 
-// [START cloud_search_sdk_imports]
+// [START cloud_search_content_sdk_imports]
 import com.google.api.client.http.ByteArrayContent;
 import com.google.api.services.cloudsearch.v1.model.Item;
 import com.google.api.services.cloudsearch.v1.model.PushItem;
@@ -33,7 +33,7 @@ import com.google.enterprise.cloudsearch.sdk.indexing.template.*;
 import java.util.Collections;
 import java.util.Set;
 import java.util.logging.Logger;
-// [END cloud_search_sdk_imports]
+// [END cloud_search_content_sdk_imports]
 
 /**
  * A sample connector using the Cloud Search SDK.
@@ -68,6 +68,7 @@ import java.util.logging.Logger;
  * </pre>
  */
 public class GraphTraversalSample {
+  // [START cloud_search_content_sdk_main]
   /**
    * This sample connector uses the Cloud Search SDK template class for a graph
    * traversal connector.
@@ -81,6 +82,7 @@ public class GraphTraversalSample {
     IndexingApplication application = new IndexingApplication.Builder(connector, args).build();
     application.start();
   }
+  // [END cloud_search_content_sdk_main]
 
   /**
    * Sample repository that indexes a set of synthetic documents.
@@ -161,7 +163,6 @@ public class GraphTraversalSample {
     public CheckpointCloseableIterable<ApiOperation> getIds(byte[] checkpoint) {
       log.info("Pushing root documents to index");
 
-      PushItems.Builder allIds = new PushItems.Builder();
       // Note that on subsequent traversals pushing the root node may not result
       // in the full graph traversal. Unmodified items are withheld from the
       // queue for up to 4 hours. This may delay detection of changes
@@ -170,13 +171,20 @@ public class GraphTraversalSample {
       // metadata hash values to efficiently re-trigger the traversal.
       // Alternatively, for repositories that enumerate incremental changes,
       // implement {@link #getChanges} to provide incremental updates.
+      // [START cloud_search_content_sdk_push_root]
+      PushItems.Builder allIds = new PushItems.Builder();
       PushItem item = new PushItem();
       allIds.addPushItem("root", item);
+      // [END cloud_search_content_sdk_push_root]
 
+      // [START cloud_search_content_sdk_checkpoint_iterator]
       ApiOperation pushOperation = allIds.build();
-      return new CheckpointCloseableIterableImpl.Builder<>(
-          Collections.singletonList(pushOperation))
-          .build();
+      CheckpointCloseableIterable<ApiOperation> itertor =
+        new CheckpointCloseableIterableImpl.Builder<>(
+            Collections.singletonList(pushOperation))
+        .build();
+      // [END cloud_search_content_sdk_checkpoint_iterator]
+      return iterator;
     }
 
     /**
@@ -196,14 +204,15 @@ public class GraphTraversalSample {
     public ApiOperation getDoc(Item item) {
       log.info(() -> String.format("Indexing document %s", item.getName()));
 
+      // [START cloud_search_content_sdk_get_doc]
       String resourceName = item.getName();
       if (documentExists(resourceName)) {
         return buildDocumentAndChildren(resourceName);
-      } else {
-        // Document doesn't exist, delete it
-        log.info(() -> String.format("Deleting document %s", resourceName));
-        return ApiOperations.deleteItem(resourceName);
       }
+      // Document doesn't exist, delete it
+      log.info(() -> String.format("Deleting document %s", resourceName));
+      return ApiOperations.deleteItem(resourceName);
+      // [END cloud_search_content_sdk_get_doc]
     }
 
     /**
@@ -224,6 +233,7 @@ public class GraphTraversalSample {
           .setReaders(Collections.singletonList(Acl.getCustomerPrincipal()))
           .build();
 
+      // [START cloud_search_content_sdk_build_item]
       // Url is required. Use google.com as a placeholder for this sample.
       String viewUrl = "https://www.google.com";
 
@@ -239,7 +249,9 @@ public class GraphTraversalSample {
           .setUrl(IndexingItemBuilder.FieldOrValue.withValue(viewUrl))
           .setVersion(version)
           .build();
+      // [END cloud_search_content_sdk_build_item]
 
+      // [START cloud_search_content_sdk_build_repository_doc]
       // For this sample, content is just plain text
       String content = String.format("Hello world from sample doc %s", documentId);
       ByteArrayContent byteContent = ByteArrayContent.fromString("text/plain", content);
@@ -247,7 +259,9 @@ public class GraphTraversalSample {
       RepositoryDoc.Builder docBuilder = new RepositoryDoc.Builder()
           .setItem(item)
           .setContent(byteContent, IndexingService.ContentFormat.TEXT);
+      // [END cloud_search_content_sdk_build_repository_doc]
 
+      // [START cloud_search_content_sdk_add_children]
       // Queue the child nodes to visit after indexing this document
       Set<String> childIds = getChildItemNames(documentId);
       for (String id : childIds) {
@@ -256,7 +270,9 @@ public class GraphTraversalSample {
         docBuilder.addChildId(id, pushItem);
       }
 
-      return docBuilder.build();
+      RepositoryDoc doc = docBuilder.build();
+      // [END cloud_search_content_sdk_add_children]
+      return doc;
     }
 
     // The following method is not used in this simple full traversal sample

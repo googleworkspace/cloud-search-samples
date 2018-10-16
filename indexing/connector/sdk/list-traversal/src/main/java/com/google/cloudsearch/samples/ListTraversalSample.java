@@ -16,8 +16,7 @@
 
 package com.google.cloudsearch.samples;
 
-// [START cloud_search_sdk_imports]
-
+// [START cloud_search_content_sdk_imports]
 import com.google.api.client.http.ByteArrayContent;
 import com.google.api.services.cloudsearch.v1.model.Item;
 import com.google.api.services.cloudsearch.v1.model.PushItem;
@@ -33,7 +32,7 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Random;
 import java.util.logging.Logger;
-// [END cloud_search_sdk_imports]
+// [END cloud_search_content_sdk_imports]
 
 /**
  * A sample connector using the Cloud Search SDK.
@@ -74,6 +73,7 @@ import java.util.logging.Logger;
  * </pre>
  */
 public class ListTraversalSample {
+  // [START cloud_search_content_sdk_main]
   /**
    * This sample connector uses the Cloud Search SDK template class for a
    * list traversal connector.
@@ -87,6 +87,7 @@ public class ListTraversalSample {
     IndexingApplication application = new IndexingApplication.Builder(connector, args).build();
     application.start();
   }
+  // [END cloud_search_content_sdk_main]
 
   /**
    * Sample repository that indexes a set of synthetic documents.
@@ -171,6 +172,7 @@ public class ListTraversalSample {
       // prepare the data repository for the next simulated traversal
       mutate();
 
+      // [START cloud_search_content_sdk_push_ids]
       PushItems.Builder allIds = new PushItems.Builder();
       for (Map.Entry<Integer, Long> entry : this.documents.entrySet()) {
         String documentId = Integer.toString(entry.getKey());
@@ -179,10 +181,15 @@ public class ListTraversalSample {
         log.info("Pushing " + documentId);
         allIds.addPushItem(documentId, item);
       }
+      // [END cloud_search_content_sdk_push_ids]
+      // [START cloud_search_content_sdk_checkpoint_iterator]
       ApiOperation pushOperation = allIds.build();
-      return new CheckpointCloseableIterableImpl.Builder<>(
-          Collections.singletonList(pushOperation))
-          .build();
+      CheckpointCloseableIterable<ApiOperation> iterator =
+        new CheckpointCloseableIterableImpl.Builder<>(
+            Collections.singletonList(pushOperation))
+        .build();
+      return iterator;
+      // [START cloud_search_content_sdk_checkpoint_iterator]
     }
 
     /**
@@ -215,6 +222,7 @@ public class ListTraversalSample {
     public ApiOperation getDoc(Item item) {
       log.info(() -> String.format("Checking document %s", item.getName()));
 
+      // [START cloud_search_content_sdk_deleted_item]
       String resourceName = item.getName();
       int documentId = Integer.parseInt(resourceName);
       String status = item.getStatus().getCode();
@@ -223,16 +231,19 @@ public class ListTraversalSample {
         // Document no longer exists -- delete it
         log.info(() -> String.format("Deleting document %s", item.getName()));
         return ApiOperations.deleteItem(resourceName);
-      } else if (status.equals(IndexingServiceImpl.PollItemStatus.ACCEPTED.toString())) {
+      }
+      // [END cloud_search_content_sdk_deleted_item]
+      // [START cloud_search_content_sdk_unchanged_item]
+      if (status.equals(IndexingServiceImpl.PollItemStatus.ACCEPTED.toString())) {
         // Document neither modified nor deleted, ack the push
         log.info(() -> String.format("Document %s not modified", item.getName()));
         PushItem pushItem = new PushItem().setType("NOT_MODIFIED");
         return new PushItems.Builder().addPushItem(resourceName, pushItem).build();
-      } else {
-        // New or modified document, index it.
-        log.info(() -> String.format("Updating document %s", item.getName()));
-        return buildDocument(documentId);
       }
+      // [END cloud_search_content_sdk_unchanged_item]
+      // New or modified document, index it.
+      log.info(() -> String.format("Updating document %s", item.getName()));
+      return buildDocument(documentId);
     }
 
     /**
@@ -250,6 +261,7 @@ public class ListTraversalSample {
           .setReaders(Collections.singletonList(Acl.getCustomerPrincipal()))
           .build();
 
+      // [START cloud_search_content_sdk_build_item]
       // Url is required. Use google.com as a placeholder for this sample.
       String viewUrl = "https://www.google.com";
 
@@ -269,16 +281,20 @@ public class ListTraversalSample {
           .setVersion(version)
           .setHash(metadataHash)
           .build();
+      // [END cloud_search_content_sdk_build_item]
 
+      // [START cloud_search_content_sdk_build_repository_doc]
       // For this sample, content is just plain text
       String content = String.format("Hello world from sample doc %d", documentId);
       ByteArrayContent byteContent = ByteArrayContent.fromString("text/plain", content);
 
       // Create the fully formed document
-      return new RepositoryDoc.Builder()
+      RepositoryDoc doc = new RepositoryDoc.Builder()
           .setItem(item)
           .setContent(byteContent, IndexingService.ContentFormat.TEXT)
           .build();
+      // [END cloud_search_content_sdk_build_repository_doc]
+      return doc;
     }
 
     // The following method is not used in this simple full traversal sample

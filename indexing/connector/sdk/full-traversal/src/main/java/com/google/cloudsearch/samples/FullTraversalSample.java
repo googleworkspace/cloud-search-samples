@@ -15,7 +15,7 @@
  */
 package com.google.cloudsearch.samples;
 
-// [START cloud_search_sdk_imports]
+// [START cloud_search_content_sdk_imports]
 import com.google.api.client.http.ByteArrayContent;
 import com.google.api.services.cloudsearch.v1.model.Item;
 import com.google.common.primitives.Longs;
@@ -37,7 +37,7 @@ import java.util.Collections;
 import java.util.Iterator;
 import java.util.logging.Logger;
 import java.util.stream.IntStream;
-// [END cloud_search_sdk_imports]
+// [END cloud_search_content_sdk_imports]
 
 /**
  * A sample connector using the Cloud Search SDK.
@@ -72,6 +72,7 @@ import java.util.stream.IntStream;
  */
 public class FullTraversalSample {
 
+  // [START cloud_search_content_sdk_main]
   /**
    * This sample connector uses the Cloud Search SDK template class for a full
    * traversal connector.
@@ -85,6 +86,7 @@ public class FullTraversalSample {
     IndexingApplication application = new IndexingApplication.Builder(connector, args).build();
     application.start();
   }
+  // [END cloud_search_content_sdk_main]
 
   /**
    * Sample repository that indexes a set of synthetic documents.
@@ -144,7 +146,11 @@ public class FullTraversalSample {
       Iterator<ApiOperation> allDocs = IntStream.range(0, numberOfDocuments)
           .mapToObj(this::buildDocument)
           .iterator();
-      return new CheckpointCloseableIterableImpl.Builder<>(allDocs).build();
+      // [START cloud_search_content_sdk_checkpoint_iterator]
+      CheckpointCloseableIterable<ApiOperation> iterator =
+        new CheckpointCloseableIterableImpl.Builder<>(allDocs).build();
+      // [END cloud_search_content_sdk_checkpoint_iterator]
+      return iterator;
     }
 
     /**
@@ -161,6 +167,7 @@ public class FullTraversalSample {
       Acl acl = new Acl.Builder()
           .setReaders(Collections.singletonList(Acl.getCustomerPrincipal())).build();
 
+      // [START cloud_search_content_sdk_build_item]
       // Url is required. Use google.com as a placeholder for this sample.
       String viewUrl = "https://www.google.com";
 
@@ -175,16 +182,20 @@ public class FullTraversalSample {
           .setUrl(IndexingItemBuilder.FieldOrValue.withValue(viewUrl))
           .setVersion(version)
           .build();
+      // [END cloud_search_content_sdk_build_item]
 
+      // [START cloud_search_content_sdk_build_repository_doc]
       // For this sample, content is just plain text
       String content = String.format("Hello world from sample doc %d", id);
       ByteArrayContent byteContent = ByteArrayContent.fromString("text/plain", content);
 
       // Create the fully formed document
-      return new RepositoryDoc.Builder()
+      RepositoryDoc doc = new RepositoryDoc.Builder()
           .setItem(item)
           .setContent(byteContent, IndexingService.ContentFormat.TEXT)
           .build();
+      // [END cloud_search_content_sdk_build_repository_doc]
+      return doc;
     }
 
     // The following method is not used in this simple full traversal sample
