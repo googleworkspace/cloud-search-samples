@@ -15,7 +15,7 @@
  */
 package com.google.cloudsearch.samples;
 
-// [START cloud_search_sdk_imports]
+// [START cloud_search_content_sdk_imports]
 import com.google.api.services.cloudsearch.v1.model.Item;
 import com.google.common.collect.ArrayListMultimap;
 import com.google.common.collect.Multimap;
@@ -45,7 +45,7 @@ import java.util.List;
 import java.util.logging.Logger;
 import java.util.stream.Collectors;
 import java.util.stream.StreamSupport;
-// [END cloud_search_sdk_imports]
+// [END cloud_search_content_sdk_imports]
 
 /**
  * A sample connector using the Cloud Search SDK.
@@ -173,6 +173,7 @@ public class DictionaryConnector {
       }
     }
 
+    // [START cloud_search_content_sdk_index_term]
     /**
      * Creates a document for indexing.
      *
@@ -182,7 +183,6 @@ public class DictionaryConnector {
      * @param record The current CSV record to convert
      * @return the fully formed document ready for indexing
      */
-    // [START cloud_search_sdk_index_term]
     private ApiOperation buildDocument(CSVRecord record) {
       // Extract term and synonyms from record
       String term = record.get(0);
@@ -207,8 +207,8 @@ public class DictionaryConnector {
       return new RepositoryDoc.Builder()
           .setItem(item)
           .build();
-      // [END cloud_search_sdk_index_term]
     }
+    // [END cloud_search_content_sdk_index_term]
 
     // The following method is not used in this simple full traversal sample
     // connector, but could be implemented if the data repository supports a
