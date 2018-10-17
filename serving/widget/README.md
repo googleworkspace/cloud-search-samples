@@ -1,4 +1,4 @@
-# Updating schemas
+# Widget samples
 
 [![Open in Cloud Shell][cloudshell-badge]][cloudshell-open]
 
