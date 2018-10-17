@@ -733,7 +733,7 @@ public class GithubRepository implements Repository {
   }
 
   /**
-   * Checks to see if an item needs reindex
+   * Checks to see if an item is already up to date
    *
    * @param previousItem Polled item
    * @param currentHash  Metadata hash of the current github object

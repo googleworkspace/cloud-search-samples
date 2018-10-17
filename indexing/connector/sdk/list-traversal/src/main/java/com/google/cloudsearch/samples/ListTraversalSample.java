@@ -234,7 +234,8 @@ public class ListTraversalSample {
       }
       // [END cloud_search_content_sdk_deleted_item]
       // [START cloud_search_content_sdk_unchanged_item]
-      if (status.equals(IndexingServiceImpl.PollItemStatus.ACCEPTED.toString())) {
+      String currentHash = this.calculateMetadataHash(documentId);
+      if (this.canSkipIndexing(item, currentHash)) {
         // Document neither modified nor deleted, ack the push
         log.info(() -> String.format("Document %s not modified", item.getName()));
         PushItem pushItem = new PushItem().setType("NOT_MODIFIED");
@@ -255,7 +256,7 @@ public class ListTraversalSample {
      * @param documentId unique local id for the document
      * @return the fully formed document ready for indexing
      */
-    private ApiOperation buildDocument(int documentId)
+    private ApiOperation buildDocument(int documentId) {
       // [START cloud_search_content_sdk_domain_acl]
       // Make the document publicly readable within the domain
       Acl acl = new Acl.Builder()
@@ -353,6 +354,26 @@ public class ListTraversalSample {
       long timestamp = this.documents.get(documentId);
       return Long.toHexString(timestamp);
     }
+
+    // [START cloud_search_content_sdk_skip_indexing]
+    /**
+     * Checks to see if an item is already up to date
+     *
+     * @param previousItem Polled item
+     * @param currentHash  Metadata hash of the current github object
+     * @return PushItem operation
+     */
+    private boolean canSkipIndexing(Item previousItem, String currentHash) {
+      if (previousItem.getStatus() == null || previousItem.getMetadata() == null) {
+        return false;
+      }
+      String status = previousItem.getStatus().getCode();
+      String previousHash = previousItem.getMetadata().getHash();
+      return "ACCEPTED".equals(status)
+          && previousHash != null
+          && previousHash.equals(currentHash);
+    }
+    // [END cloud_search_content_sdk_skip_indexing]
 
     /**
      * Simulate changes to the repository by randomly mutate the documents. A
