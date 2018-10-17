@@ -16,7 +16,7 @@ illustrate building a custom search interface using the
    you created.
 1. Run the command to install dependencies:
    ```sh
-   npm Install
+   npm install
    ```
 
 ### Run the sample
