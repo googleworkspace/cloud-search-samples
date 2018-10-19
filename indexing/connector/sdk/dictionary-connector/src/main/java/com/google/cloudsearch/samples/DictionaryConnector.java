@@ -197,7 +197,7 @@ public class DictionaryConnector {
       String itemName = String.format("dictionary/%s", term);
 
       // Using the SDK item builder class to create the item
-      Item item = new IndexingItemBuilder(itemName)
+      Item item = IndexingItemBuilder.fromConfiguration(itemName)
           .setItemType(IndexingItemBuilder.ItemType.CONTENT_ITEM)
           .setObjectType("_dictionaryEntry")
           .setValues(structuredData)

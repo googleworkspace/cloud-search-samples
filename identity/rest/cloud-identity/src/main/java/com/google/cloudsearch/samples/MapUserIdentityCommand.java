@@ -45,7 +45,7 @@ class MapUserIdentityCommand implements Runnable {
           idSource + "_identifier", externalId);
       User user = new User().setCustomSchemas(
           Collections.singletonMap(idSource, properties));
-      User updatedUser = service.users().patch(userEmail, user).execute();
+      User updatedUser = service.users().update(userEmail, user).execute();
       System.out.printf("Updated user %s", updatedUser.toPrettyString());
     } catch (Exception e) {
       System.err.printf("Unable to map user identity: %s\n", e);

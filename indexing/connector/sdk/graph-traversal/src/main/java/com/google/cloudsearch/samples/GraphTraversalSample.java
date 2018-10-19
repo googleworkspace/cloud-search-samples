@@ -179,7 +179,7 @@ public class GraphTraversalSample {
 
       // [START cloud_search_content_sdk_checkpoint_iterator]
       ApiOperation pushOperation = allIds.build();
-      CheckpointCloseableIterable<ApiOperation> itertor =
+      CheckpointCloseableIterable<ApiOperation> iterator =
         new CheckpointCloseableIterableImpl.Builder<>(
             Collections.singletonList(pushOperation))
         .build();
@@ -246,10 +246,10 @@ public class GraphTraversalSample {
       // Using the SDK item builder class to create the document with
       // appropriate attributes. This can be expanded to include metadata
       // fields etc.
-      Item item = new IndexingItemBuilder(documentId)
+      Item item = IndexingItemBuilder.fromConfiguration(documentId)
           .setItemType(IndexingItemBuilder.ItemType.CONTENT_ITEM)
           .setAcl(acl)
-          .setUrl(IndexingItemBuilder.FieldOrValue.withValue(viewUrl))
+          .setSourceRepositoryUrl(IndexingItemBuilder.FieldOrValue.withValue(viewUrl))
           .setVersion(version)
           .build();
       // [END cloud_search_content_sdk_build_item]

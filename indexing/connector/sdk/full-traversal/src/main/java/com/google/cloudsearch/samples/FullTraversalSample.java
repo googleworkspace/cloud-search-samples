@@ -181,10 +181,10 @@ public class FullTraversalSample {
 
       // Using the SDK item builder class to create the document with appropriate attributes
       // (this can be expanded to include metadata fields etc.)
-      Item item = new IndexingItemBuilder(Integer.toString(id))
+      Item item = IndexingItemBuilder.fromConfiguration(Integer.toString(id))
           .setItemType(IndexingItemBuilder.ItemType.CONTENT_ITEM)
           .setAcl(acl)
-          .setUrl(IndexingItemBuilder.FieldOrValue.withValue(viewUrl))
+          .setSourceRepositoryUrl(IndexingItemBuilder.FieldOrValue.withValue(viewUrl))
           .setVersion(version)
           .build();
       // [END cloud_search_content_sdk_build_item]

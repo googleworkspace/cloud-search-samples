@@ -372,8 +372,10 @@ public class GithubRepository implements Repository {
     String resourceName = repo.getHtmlUrl().getPath();
     FieldOrValue<String> title = FieldOrValue.withValue(repo.getFullName());
     FieldOrValue<String> url = FieldOrValue.withValue(repo.getHtmlUrl().toExternalForm());
-    FieldOrValue<DateTime> creationTime = FieldOrValue.withValue(
+    FieldOrValue<DateTime> createTime = FieldOrValue.withValue(
         new DateTime(repo.getCreatedAt().getTime()));
+    FieldOrValue<DateTime> updateTime = FieldOrValue.withValue(
+        new DateTime(repo.getUpdatedAt().getTime()));
 
     // Structured data based on the schema
     Multimap<String, Object> structuredData = ArrayListMultimap.create();
@@ -387,14 +389,15 @@ public class GithubRepository implements Repository {
     structuredData.put("updatedAt", repo.getUpdatedAt());
 
     // Create the item to index
-    Item item = new IndexingItemBuilder(resourceName)
+    Item item = IndexingItemBuilder.fromConfiguration(resourceName)
         .setTitle(title)
-        .setUrl(url)
+        .setSourceRepositoryUrl(url)
         .setItemType(IndexingItemBuilder.ItemType.CONTAINER_ITEM)
         .setObjectType("repository")
         .setValues(structuredData)
         .setVersion(Longs.toByteArray(repo.getUpdatedAt().getTime()))
-        .setCreationTime(creationTime)
+        .setCreateTime(createTime)
+        .setUpdateTime(updateTime)
         .setHash(metadataHash)
         .build();
 
@@ -431,8 +434,10 @@ public class GithubRepository implements Repository {
     FieldOrValue<String> title = FieldOrValue.withValue(pullRequest.getTitle());
     FieldOrValue<String> url = FieldOrValue.withValue(
         pullRequest.getHtmlUrl().toExternalForm());
-    FieldOrValue<DateTime> creationTime = FieldOrValue.withValue(
+    FieldOrValue<DateTime> createTime = FieldOrValue.withValue(
         new DateTime(pullRequest.getCreatedAt().getTime()));
+    FieldOrValue<DateTime> updateTime = FieldOrValue.withValue(
+        new DateTime(pullRequest.getUpdatedAt().getTime()));
     String containerName = pullRequest.getRepository().getHtmlUrl().getPath();
 
     // Structured data based on the schema
@@ -460,15 +465,16 @@ public class GithubRepository implements Repository {
     structuredData.put("createdAt", pullRequest.getCreatedAt());
     structuredData.put("updatedAt", pullRequest.getUpdatedAt());
 
-    Item item = new IndexingItemBuilder(resourceName)
+    Item item = IndexingItemBuilder.fromConfiguration(resourceName)
         .setTitle(title)
-        .setContainer(containerName)
-        .setUrl(url)
+        .setContainerName(containerName)
+        .setSourceRepositoryUrl(url)
         .setItemType(IndexingItemBuilder.ItemType.CONTAINER_ITEM)
         .setObjectType("pullRequest")
         .setValues(structuredData)
         .setVersion(Longs.toByteArray(pullRequest.getUpdatedAt().getTime()))
-        .setCreationTime(creationTime)
+        .setCreateTime(createTime)
+        .setUpdateTime(updateTime)
         .setHash(metadataHash)
         .build();
 
@@ -505,8 +511,10 @@ public class GithubRepository implements Repository {
     FieldOrValue<String> title = FieldOrValue.withValue(issue.getTitle());
     FieldOrValue<String> url = FieldOrValue.withValue(
         issue.getHtmlUrl().toExternalForm());
-    FieldOrValue<DateTime> creationTime = FieldOrValue.withValue(
+    FieldOrValue<DateTime> createTime = FieldOrValue.withValue(
         new DateTime(issue.getCreatedAt().getTime()));
+    FieldOrValue<DateTime> updateTime = FieldOrValue.withValue(
+        new DateTime(issue.getUpdatedAt().getTime()));
     String containerName = issue.getRepository().getHtmlUrl().getPath();
 
     // Structured data based on the schema
@@ -534,15 +542,16 @@ public class GithubRepository implements Repository {
     structuredData.put("createdAt", issue.getCreatedAt());
     structuredData.put("updatedAt", issue.getUpdatedAt());
 
-    Item item = new IndexingItemBuilder(resourceName)
+    Item item = IndexingItemBuilder.fromConfiguration(resourceName)
         .setTitle(title)
-        .setContainer(containerName)
-        .setUrl(url)
+        .setContainerName(containerName)
+        .setSourceRepositoryUrl(url)
         .setItemType(IndexingItemBuilder.ItemType.CONTAINER_ITEM)
         .setObjectType("issue")
         .setValues(structuredData)
         .setVersion(Longs.toByteArray(issue.getUpdatedAt().getTime()))
-        .setCreationTime(creationTime)
+        .setCreateTime(createTime)
+        .setUpdateTime(updateTime)
         .setHash(metadataHash)
         .build();
 
@@ -589,10 +598,10 @@ public class GithubRepository implements Repository {
     structuredData.put("path", content.getPath());
     structuredData.put("language", programmingLanguage);
 
-    Item item = new IndexingItemBuilder(resourceName)
+    Item item = IndexingItemBuilder.fromConfiguration(resourceName)
         .setTitle(title)
-        .setContainer(containerName)
-        .setUrl(url)
+        .setContainerName(containerName)
+        .setSourceRepositoryUrl(url)
         .setItemType(IndexingItemBuilder.ItemType.CONTAINER_ITEM)
         .setObjectType("file")
         .setValues(structuredData)

@@ -48,7 +48,7 @@ import java.util.logging.Logger;
  * configuration file (for example: sample-config.properties) is supplied to
  * the connector via a command line argument:
  *
- * <pre>java com.google.cloudsearch.samples.FullTraversalSample \
+ * <pre>java com.google.cloudsearch.samples.ListTraversalSample \
  * -Dconfig=sample-config.properties
  * </pre>
  *
@@ -225,7 +225,6 @@ public class ListTraversalSample {
       // [START cloud_search_content_sdk_deleted_item]
       String resourceName = item.getName();
       int documentId = Integer.parseInt(resourceName);
-      String status = item.getStatus().getCode();
 
       if (!documents.containsKey(documentId)) {
         // Document no longer exists -- delete it
@@ -277,10 +276,10 @@ public class ListTraversalSample {
       // Using the SDK item builder class to create the document with
       // appropriate attributes. This can be expanded to include metadata
       // fields etc.
-      Item item = new IndexingItemBuilder(Integer.toString(documentId))
+      Item item = IndexingItemBuilder.fromConfiguration(Integer.toString(documentId))
           .setItemType(IndexingItemBuilder.ItemType.CONTENT_ITEM)
           .setAcl(acl)
-          .setUrl(IndexingItemBuilder.FieldOrValue.withValue(viewUrl))
+          .setSourceRepositoryUrl(IndexingItemBuilder.FieldOrValue.withValue(viewUrl))
           .setVersion(version)
           .setHash(metadataHash)
           .build();
