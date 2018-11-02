@@ -15,7 +15,7 @@ let resultsContainer;
  * the initial gapi bootstrap library is ready.
  */
 function onLoad() {
-  qgapi.load('client:auth2:cloudsearch-widget', initializeApp)
+  gapi.load('client:auth2:cloudsearch-widget', initializeApp)
 }
 // [END cloud_search_tutorial_on_load]
 
