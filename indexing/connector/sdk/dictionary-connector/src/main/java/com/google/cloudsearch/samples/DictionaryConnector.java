@@ -18,12 +18,14 @@ package com.google.cloudsearch.samples;
 // [START cloud_search_content_sdk_imports]
 import com.google.api.services.cloudsearch.v1.model.Item;
 import com.google.common.collect.ArrayListMultimap;
+import com.google.common.collect.ImmutableList;
 import com.google.common.collect.Multimap;
 import com.google.enterprise.cloudsearch.sdk.CheckpointCloseableIterable;
 import com.google.enterprise.cloudsearch.sdk.CheckpointCloseableIterableImpl;
 import com.google.enterprise.cloudsearch.sdk.RepositoryException;
 import com.google.enterprise.cloudsearch.sdk.StartupException;
 import com.google.enterprise.cloudsearch.sdk.config.Configuration;
+import com.google.enterprise.cloudsearch.sdk.indexing.Acl;
 import com.google.enterprise.cloudsearch.sdk.indexing.IndexingApplication;
 import com.google.enterprise.cloudsearch.sdk.indexing.IndexingConnector;
 import com.google.enterprise.cloudsearch.sdk.indexing.IndexingItemBuilder;
@@ -32,10 +34,7 @@ import com.google.enterprise.cloudsearch.sdk.indexing.template.FullTraversalConn
 import com.google.enterprise.cloudsearch.sdk.indexing.template.Repository;
 import com.google.enterprise.cloudsearch.sdk.indexing.template.RepositoryContext;
 import com.google.enterprise.cloudsearch.sdk.indexing.template.RepositoryDoc;
-import org.apache.commons.csv.CSVFormat;
-import org.apache.commons.csv.CSVParser;
-import org.apache.commons.csv.CSVRecord;
-
+// [END cloud_search_content_sdk_imports]
 import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;
@@ -45,7 +44,9 @@ import java.util.List;
 import java.util.logging.Logger;
 import java.util.stream.Collectors;
 import java.util.stream.StreamSupport;
-// [END cloud_search_content_sdk_imports]
+import org.apache.commons.csv.CSVFormat;
+import org.apache.commons.csv.CSVParser;
+import org.apache.commons.csv.CSVRecord;
 
 /**
  * A sample connector using the Cloud Search SDK.
@@ -105,7 +106,10 @@ public class DictionaryConnector {
   public static class DictionaryRepository implements Repository {
 
     /** Log output */
-    Logger log = Logger.getLogger(DictionaryRepository.class.getName());
+    private static final Logger log = Logger.getLogger(DictionaryRepository.class.getName());
+
+    private static final Acl DOMAIN_PUBPIC_ACL =
+        new Acl.Builder().setReaders(ImmutableList.of(Acl.getCustomerPrincipal())).build();
 
     /** Dictionary file to load */
     String dictionaryFilePath;
@@ -159,8 +163,8 @@ public class DictionaryConnector {
       CSVFormat csvFormat = CSVFormat.RFC4180.withIgnoreEmptyLines()
           .withIgnoreSurroundingSpaces()
           .withCommentMarker('#');
-      try (BufferedReader br = new BufferedReader(new FileReader(dictionaryFilePath))) {
-        CSVParser parser = new CSVParser(br, csvFormat);
+      try (BufferedReader br = new BufferedReader(new FileReader(dictionaryFilePath));
+          CSVParser parser = new CSVParser(br, csvFormat)) {
         List<ApiOperation> allDocs = StreamSupport.stream(parser.spliterator(), false)
             .map(this::buildDocument)
             .collect(Collectors.toList());
@@ -197,11 +201,13 @@ public class DictionaryConnector {
       String itemName = String.format("dictionary/%s", term);
 
       // Using the SDK item builder class to create the item
-      Item item = IndexingItemBuilder.fromConfiguration(itemName)
-          .setItemType(IndexingItemBuilder.ItemType.CONTENT_ITEM)
-          .setObjectType("_dictionaryEntry")
-          .setValues(structuredData)
-          .build();
+      Item item =
+          IndexingItemBuilder.fromConfiguration(itemName)
+              .setItemType(IndexingItemBuilder.ItemType.CONTENT_ITEM)
+              .setObjectType("_dictionaryEntry")
+              .setValues(structuredData)
+              .setAcl(DOMAIN_PUBPIC_ACL)
+              .build();
 
       // Create the fully formed document
       return new RepositoryDoc.Builder()

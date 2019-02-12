@@ -44,7 +44,7 @@
     <dependency>
       <groupId>com.google.enterprise.cloudsearch</groupId>
       <artifactId>google-cloudsearch-indexing-connector-sdk</artifactId>
-      <version>v1-0.0.2</version>
+      <version>v1-0.0.3</version>
     </dependency>
     <!-- [END cloud_search_indexing_sdk_maven] -->
 
@@ -60,6 +60,12 @@
       <artifactId>truth</artifactId>
       <version>0.42</version>
       <scope>test</scope>
+      <exclusions>
+        <exclusion>
+          <groupId>com.google.guava</groupId>
+          <artifactId>guava</artifactId>
+        </exclusion>
+      </exclusions>
     </dependency>
     <dependency>
       <groupId>com.google.jimfs</groupId>
