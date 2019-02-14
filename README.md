@@ -5,7 +5,7 @@
 This repository contains end-to-end samples for Cloud Search, including
 indexing, structured data management, and querying.
 
-For more info on Cloud Search please see https://developers.google.com/cloud-search/
+You must sign up to use Cloud Search. For more information on Cloud Search, including signing up, see https://developers.google.com/cloud-search/
 
 ## Contributing changes
 
