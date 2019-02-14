@@ -5,6 +5,8 @@
 This repository contains end-to-end samples for Cloud Search, including
 indexing, structured data management, and querying.
 
+For more info on Cloud Search please see https://developers.google.com/cloud-search/
+
 ## Contributing changes
 
 * See [CONTRIBUTING.md](CONTRIBUTING.md)
