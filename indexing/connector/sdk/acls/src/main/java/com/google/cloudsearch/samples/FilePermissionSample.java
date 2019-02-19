@@ -152,7 +152,6 @@ public class FilePermissionSample {
     // [END_EXCLUDE]
   }
   // [END cloud_search_content_sdk_posix_acl]
-]
 
   /**
    * Sample for mapping permissions from a source repository to Cloud Search

@@ -23,7 +23,7 @@
   <description>
     Snippets illustrating how to handle ACLs in a variety of use cases
   </description>
-
+  
   <!--
     The parent pom defines common style checks and testing strategies for our samples.
     Removing or replacing it should not affect the execution of the samples in anyway.
@@ -71,5 +71,11 @@
       <groupId>com.google.jimfs</groupId>
       <artifactId>jimfs</artifactId>
       <version>1.1</version>
+      <exclusions>
+        <exclusion>
+          <groupId>com.google.guava</groupId>
+          <artifactId>guava</artifactId>
+        </exclusion>
+      </exclusions>
     </dependency>  </dependencies>
 </project>
