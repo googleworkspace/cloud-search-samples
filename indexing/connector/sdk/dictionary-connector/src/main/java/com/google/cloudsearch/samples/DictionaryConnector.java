@@ -108,7 +108,7 @@ public class DictionaryConnector {
     /** Log output */
     private static final Logger log = Logger.getLogger(DictionaryRepository.class.getName());
 
-    private static final Acl DOMAIN_PUBPIC_ACL =
+    private static final Acl DOMAIN_PUBLIC_ACL =
         new Acl.Builder().setReaders(ImmutableList.of(Acl.getCustomerPrincipal())).build();
 
     /** Dictionary file to load */
@@ -206,7 +206,7 @@ public class DictionaryConnector {
               .setItemType(IndexingItemBuilder.ItemType.CONTENT_ITEM)
               .setObjectType("_dictionaryEntry")
               .setValues(structuredData)
-              .setAcl(DOMAIN_PUBPIC_ACL)
+              .setAcl(DOMAIN_PUBLIC_ACL)
               .build();
 
       // Create the fully formed document
