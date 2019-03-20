@@ -61,7 +61,7 @@ function initializeApp() {
   loadConfiguration().then(function() {
     // Set API version to v1.
     // [START cloud_search_widget_pin_version]
-    gapi.config.update('cloudsearch.config/apiVersion', 'v1');
+    gapi.config.update('cloudsearch.config/apiVersion', 'v1.1');
     // [END cloud_search_widget_pin_version]
 
     // Build the result container and bind to DOM elements.
