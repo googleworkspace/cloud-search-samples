@@ -21,12 +21,20 @@ using the using the [Connector SDK][sdk-guide].
 ### Configure the connector
 
 Prior to running the sample, edit `sample-config.properties` to provide the
-datasource ID and service account credentials. For example:
+datasource ID, the service account credentials and the local schema file.
+
+For example:
 
 ```
 api.sourceId=1234567890abcdef
 api.serviceAccountPrivateKeyFile=./my-connector-credentials.json
+structuredData.localSchema=./my-local-dictionary-scema.json
+connector.runOnce=true
 ```
+
+Please replace `my-connector-credentials.json` with your service account 
+key file and `my-local-dictionary-scema.json` with a local copy of 
+`_dictionaryEntry` schema following the definition documented [here](https://developers.google.com/cloud-search/docs/reference/schemas)
 
 The connector is configure to read dictionary items from the sample
 `dictionary.csv` file. The first column in the CSV is the term to define,
