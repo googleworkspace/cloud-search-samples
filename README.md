@@ -1,3 +1,5 @@
+This is Eden's project aimed at enabling google cloud search for the analyst team
+
 # Cloud Search Samples
 
 ![logo][cloudsearch-logo]
