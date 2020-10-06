@@ -197,6 +197,10 @@ public class DictionaryConnector {
       Multimap<String, Object> structuredData = ArrayListMultimap.create();
       structuredData.put("_term", term);
       structuredData.putAll("_synonym", synonyms);
+      
+      if (Configuration.getBoolean("dictionary.attachedToSearchApp", false).get()) {
+        structuredData.put("_onlyApplicableForAttachedSearchApplications", true);
+      }
 
       String itemName = String.format("dictionary/%s", term);
 
