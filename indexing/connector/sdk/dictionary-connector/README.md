@@ -53,7 +53,7 @@ The connector is configured to run once and exit.
 
 
 [cloudshell-badge]: http://gstatic.com/cloudssh/images/open-btn.png
-[cloudshell-open]: https://console.cloud.google.com/cloudshell/open?git_repo=https://github.com/gsuitedevs/cloud-search-samples&page=editor&open_in_editor=indexing/connector/sdk/dictionary-connector/README.md
+[cloudshell-open]: https://console.cloud.google.com/cloudshell/open?git_repo=https://github.com/googleworkspace/cloud-search-samples&page=editor&open_in_editor=indexing/connector/sdk/dictionary-connector/README.md
 [cloud-search]: https://developers.google.com/cloud-search/
 [sdk-guide]: https://developers.google.com/cloud-search/docs/guides/connector-overview
 [project-setup]: https://developers.google.com/cloud-search/docs/guides/project-setup

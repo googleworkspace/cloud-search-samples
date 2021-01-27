@@ -34,7 +34,7 @@ Open the url `http://localhost:8080` in your browser and try each
 of the samples. If using Cloud Shell, click the web preview button to open the application.
 
 [cloudshell-badge]: http://gstatic.com/cloudssh/images/open-btn.png
-[cloudshell-open]: https://console.cloud.google.com/cloudshell/open?git_repo=https://github.com/gsuitedevs/cloud-search-samples&page=editor&open_in_editor=serving/widget/README.md
+[cloudshell-open]: https://console.cloud.google.com/cloudshell/open?git_repo=https://github.com/googleworkspace/cloud-search-samples&page=editor&open_in_editor=serving/widget/README.md
 [cloud-search]: https://developers.google.com/cloud-search/
 [project-setup]: https://developers.google.com/cloud-search/docs/guides/project-setup
 [maven-install]: http://maven.apache.org/install.html

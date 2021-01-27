@@ -38,7 +38,7 @@ mvn exec:java -Dexec.mainClass=com.google.cloudsearch.samples.Main \
 ```
 
 [cloudshell-badge]: http://gstatic.com/cloudssh/images/open-btn.png
-[cloudshell-open]: https://console.cloud.google.com/cloudshell/open?git_repo=https://github.com/gsuitedevs/cloud-search-samples&page=editor&open_in_editor=identity/rest/cloud-identity/README.md
+[cloudshell-open]: https://console.cloud.google.com/cloudshell/open?git_repo=https://github.com/googleworkspace/cloud-search-samples&page=editor&open_in_editor=identity/rest/cloud-identity/README.md
 [cloud-search]: https://developers.google.com/cloud-search/
 [google-api-java]: https://github.com/google/google-api-java-client
 [project-setup]: https://developers.google.com/cloud-search/docs/guides/project-setup

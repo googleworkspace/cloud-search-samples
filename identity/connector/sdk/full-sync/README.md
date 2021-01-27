@@ -53,7 +53,7 @@ mvn exec:java -Dexec.mainClass=com.google.cloudsearch.samples.IdentityConnectorS
 The connector is configured to run once and exit.
 
 [cloudshell-badge]: http://gstatic.com/cloudssh/images/open-btn.png
-[cloudshell-open]: https://console.cloud.google.com/cloudshell/open?git_repo=https://github.com/gsuitedevs/cloud-search-samples&page=editor&open_in_editor=identity/connector/sdk/full-sync/README.md
+[cloudshell-open]: https://console.cloud.google.com/cloudshell/open?git_repo=https://github.com/googleworkspace/cloud-search-samples&page=editor&open_in_editor=identity/connector/sdk/full-sync/README.md
 [cloud-search]: https://developers.google.com/cloud-search/
 [google-api-java]: https://github.com/google/google-api-java-client
 [sdk-guide]: https://developers.google.com/cloud-search/docs/guides/identity-connector

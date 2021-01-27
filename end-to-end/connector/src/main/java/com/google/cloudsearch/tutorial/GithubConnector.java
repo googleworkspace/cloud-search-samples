@@ -57,7 +57,7 @@ import com.google.enterprise.cloudsearch.sdk.indexing.template.Repository;
  * # '<orgname>' to index all repositories in an or, or '<orgname/repo>'
  * # to index a specific repository. For multiple values, separate
  * # values with commas.
- * github.repos=gsuitedevs/md2googleslides
+ * github.repos=googleworkspace/md2googleslides
  *
  * # Login name of the user to authorize as when using the GitHub API
  * github.user=sqrrrl

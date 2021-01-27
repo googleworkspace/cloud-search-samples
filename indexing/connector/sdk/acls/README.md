@@ -35,7 +35,7 @@ mvn exec:java -Dexec.mainClass=com.google.cloudsearch.samples.FullTraversalSampl
 The Cloud Search ACL for the file will be displayed.
 
 [cloudshell-badge]: http://gstatic.com/cloudssh/images/open-btn.png
-[cloudshell-open]: https://console.cloud.google.com/cloudshell/open?git_repo=https://github.com/gsuitedevs/cloud-search-samples&page=editor&open_in_editor=indexing/connector/sdk/acls/README.md
+[cloudshell-open]: https://console.cloud.google.com/cloudshell/open?git_repo=https://github.com/googleworkspace/cloud-search-samples&page=editor&open_in_editor=indexing/connector/sdk/acls/README.md
 [cloud-search]: https://developers.google.com/cloud-search/
 [google-api-java]: https://github.com/google/google-api-java-client
 [sdk-guide]: https://developers.google.com/cloud-search/docs/guides/connector-overview

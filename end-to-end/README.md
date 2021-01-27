@@ -11,6 +11,6 @@ See the [tutorial][tutorial-url] for full instructions on how to
 configure and deploy the tutorial.
 
 [cloudshell-badge]: http://gstatic.com/cloudssh/images/open-btn.png
-[cloudshell-open]: https://console.cloud.google.com/cloudshell/open?git_repo=https://github.com/gsuitedevs/cloud-search-samples&page=editor&open_in_editor=end-to-end/README.md
+[cloudshell-open]: https://console.cloud.google.com/cloudshell/open?git_repo=https://github.com/googleworkspace/cloud-search-samples&page=editor&open_in_editor=end-to-end/README.md
 [cloud-search]: https://developers.google.com/cloud-search/
 [tutorial-url]: https://developers.google.com/cloud-search/docs/tutorials/end-to-end/
